@@ -28,6 +28,10 @@ class Commande
     #[ORM\JoinColumn(nullable: false)]
     private $idStatut;
 
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'commandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $idUtilisateur;
+
     public function __construct()
     {
         $this->lignes = new ArrayCollection();
@@ -107,5 +111,17 @@ class Commande
     public function __toString(): string
     {
         return $this->numeroCommande;
+    }
+
+    public function getIdUtilisateur(): ?Utilisateur
+    {
+        return $this->idUtilisateur;
+    }
+
+    public function setIdUtilisateur(?Utilisateur $idUtilisateur): self
+    {
+        $this->idUtilisateur = $idUtilisateur;
+
+        return $this;
     }
 }
