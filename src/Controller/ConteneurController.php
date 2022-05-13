@@ -104,7 +104,7 @@ class ConteneurController extends AbstractController
         if ($conteneurRepository->findOneby(['idStock' => $form['idStock']->getData()]) && !$form['idStock']->getData()->isMultiStockage() ) {
 
             // Add Flash de validation
-            $this->addFlash('MouvementImpossible', 'L\'adresse de destination'. $form['idStock']->getData().'est deja occupé ou inexistante');
+            $this->addFlash('MouvementImpossible', 'L\'adresse de destination '. $form['idStock']->getData().' est deja occupé');
 
             //Reinitialise l'adresse de stockage pour affichage
             $conteneur->setIdStock($adresse);

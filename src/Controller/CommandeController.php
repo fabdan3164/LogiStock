@@ -25,6 +25,7 @@ class CommandeController extends AbstractController
     public function new(Request $request, CommandeRepository $commandeRepository): Response
     {
         $commande = new Commande();
+
         $form = $this->createForm(CommandeType::class, $commande);
         $form->handleRequest($request);
 
