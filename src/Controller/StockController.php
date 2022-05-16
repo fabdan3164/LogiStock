@@ -69,10 +69,24 @@ class StockController extends AbstractController
     #[Route('/{id}', name: 'app_stock_delete', methods: ['POST'])]
     public function delete(Request $request, Stock $stock, StockRepository $stockRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$stock->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $stock->getId(), $request->request->get('_token'))) {
             $stockRepository->remove($stock, true);
         }
 
         return $this->redirectToRoute('app_stock_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/json/{adresse}', name: 'app_stock_json', methods: [ 'GET', 'POST'])]
+    public function jsonAdresse(Request $request, StockRepository $stockRepository): Response
+    {
+        $adresse = $stockRepository->findby(['adresseStock' => $request->get('adresse')]);
+        json_encode($adresse);
+        if ($adresse) {
+
+            return $this->json($adresse, 200);
+
+        } else return $this->json(false, 200);
+    }
+
+
 }

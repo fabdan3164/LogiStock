@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Repository\ConteneurRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: ConteneurRepository::class)]
-class Conteneur
+class Conteneur implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -114,6 +115,14 @@ class Conteneur
     public function __toString(): string
     {
         return $this->codeConteneur;
+    }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'codeConteneur' => $this->codeConteneur,
+            'idConteneur' => $this->id,
+        );
     }
 
 }

@@ -11,14 +11,43 @@
             </button>
         </div>
     {% endfor %}
-    <h1>ID : {{ conteneur.id}}</h1>
+
     <h2>{{ conteneur.codeConteneur }}</h2>
-    <h2>{{ conteneur.idStock}}</h2>
+    <h2>{{ conteneur.idStock }}</h2>
     <h2>{{ conteneur.idProduit.partNumber }} - {{ conteneur.idProduit.denomination }}</h2>
 
-    {{ include('conteneur/_form.html.twig', {'button_label': 'Déplacer'}) }}
+    {{ form_start(form, {'name': 'formValidate'} ) }}
+    {{ form_widget(form.idStock, {'id': 'idSelect'} ) }}
+    {{ form_end(form) }}
+
+    <label for="adresseSaisie">Scanner/Saisir l'adresse de stockage</label>
+    <input id="adresseSaisie" type="text">
+    <button type="button" onclick="adresseControl()">Valider</button>
 
     <a href="{{ path('app_conteneur_index') }}">back to list</a>
+    <script>
 
+        // fonction pour valider l'existence de l'adresse dans la base de donnée via une API
+        function adresseControl() {
+
+            //Récupérer l'input
+            let input = document.getElementById("adresseSaisie").value
+
+            //Lancer le fetch sur l'URL de l'API
+            fetch(window.location.origin + '/stock/json/' + input)
+                .then(result => result.json())
+                .then(data => {
+                    // Si il n'y a pas de donnée dans l'API renvoyer un message d'erreur
+                    if (!data) {
+                        alert("l'adresse " + input + " n'existe pas.");
+                    }
+                    // Sinon modifier la valeur et envoyer le formulaire
+                    else
+                        document.getElementById("idSelect").value = data[0].idStock;
+                        document.forms["formValidate"].submit();
+                })
+        }
+
+    </script>
 
 {% endblock %}

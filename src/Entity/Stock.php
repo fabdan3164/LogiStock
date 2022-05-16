@@ -5,10 +5,11 @@ namespace App\Entity;
 use App\Repository\StockRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use JsonSerializable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StockRepository::class)]
-class Stock
+class Stock implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,6 +23,7 @@ class Stock
     private $multiStockage;
 
     #[ORM\OneToMany(mappedBy: 'idStock', targetEntity: Conteneur::class)]
+
     private $conteneurs;
 
     public function __construct()
@@ -91,5 +93,13 @@ class Stock
     public function __toString(): string
     {
         return $this->adresseStock;
+    }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'adresseStock' => $this->adresseStock,
+            'idStock' => $this->id,
+        );
     }
 }

@@ -29,32 +29,43 @@ class ConteneurController extends AbstractController
         ]);
     }
 
+
+    #[Route('/select', name: 'app_conteneur_select', methods: ['GET'])]
+    public function selectConteneur( ConteneurRepository $conteneurRepository): Response
+    {
+        return $this->render('conteneur/select.html.twig', [
+        ]);
+    }
+
+
     #[Route('/new', name: 'app_conteneur_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ConteneurRepository $conteneurRepository, StockRepository $stockRepository, FluxRepository $fluxRepository): Response
     {
         $conteneur = new Conteneur();
         $conteneur->setDateReception(new DateTime());
         $conteneur->setIdStock($stockRepository->find(1));
-        $codeConteneur = 'CONT-' . ByteString::fromRandom(15, '0123456789');
 
+        //        Créer un code conteneur aléatoire et unique
+        $codeConteneur = 'CONT-' . ByteString::fromRandom(15, '0123456789');
         if ($conteneurRepository->findby(['codeConteneur' => $codeConteneur])) {
             $conteneur->setCodeConteneur('CONT-' . ByteString::fromRandom(15, '0123456789'));
         } else {
             $conteneur->setCodeConteneur($codeConteneur);
         }
 
-
         $form = $this->createForm(ConteneurType::class, $conteneur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+//           Inscrit le mouvement de reception dans la table flux
             $flux = new Flux();
             $flux->setDateFlux(new DateTime());
             $flux->setQuantite($form['quantite']->getData());
             $flux->setType("RECEPTION");
+            $flux->setOrigine($conteneur->getIdReception()->getBonDeCommande());
             $flux->setAdresseStock($conteneur->getIdStock()->getAdresseStock());
             $flux->setCodeConteneur($conteneur->getCodeConteneur());
-
             $conteneurRepository->add($conteneur, true);
             $fluxRepository->add($flux, true);
             return $this->redirectToRoute('app_conteneur_index', [], Response::HTTP_SEE_OTHER);
@@ -93,28 +104,33 @@ class ConteneurController extends AbstractController
     }
 
 
-    #[Route('/{id}/mouvement', name: 'app_conteneur_mouvement', methods: ['GET', 'POST'])]
-    public function mouvement( $id,Request $request, Conteneur $conteneur, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository): Response
+
+
+    #[Route('/select/{id}', name: 'app_conteneur_mouvement', methods: ['GET', 'POST'])]
+    public function mouvement(Request $request, Conteneur $conteneur, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository): Response
     {
         $adresse = $conteneur->getIdStock();
         $form = $this->createForm(ConteneurTypeMvt::class, $conteneur);
         $form->handleRequest($request);
 
+
         // Si l'emplacement de destination est deja occupé bloquer et ajouter un add flash
-        if ($conteneurRepository->findOneby(['idStock' => $form['idStock']->getData()]) && !$form['idStock']->getData()->isMultiStockage() ) {
+        if ( $form->isSubmitted() && $conteneurRepository->findOneby(['idStock' => $form['idStock']->getData()]) && !$form['idStock']->getData()->isMultiStockage() ) {
+
+
+            //Reinitialise l'adresse de stockage pour affichage
+            $conteneur->setIdStock($adresse);
 
             // Add Flash de validation
             $this->addFlash('MouvementImpossible', 'L\'adresse de destination '. $form['idStock']->getData().' est deja occupé');
 
-            //Reinitialise l'adresse de stockage pour affichage
-            $conteneur->setIdStock($adresse);
 
             // Renvoie sur la vue pour une nouvelle saisie
             return $this->renderForm('conteneur/mouvement.html.twig', [
                 'conteneur' => $conteneur,
                 'form' => $form,
-
             ]);
+
 
         }
 
@@ -140,8 +156,8 @@ class ConteneurController extends AbstractController
             $fluxRepository->add($flux1, true);
             $fluxRepository->add($flux2, true);
 
-
             return $this->redirectToRoute('app_conteneur_index', [], Response::HTTP_SEE_OTHER);
+
         }
 
         return $this->renderForm('conteneur/mouvement.html.twig', [
@@ -198,5 +214,16 @@ class ConteneurController extends AbstractController
         ]);
     }
 
+    #[Route('/json/{codeConteneur}', name: 'app_conteneur_json', methods: [ 'GET', 'POST'])]
+    public function jsonConteneur(Request $request, ConteneurRepository $conteneurRepository): Response
+    {
+        $conteneur = $conteneurRepository->findby(['codeConteneur' => $request->get('codeConteneur')]);
+        json_encode($conteneur);
+        if ($conteneur) {
+
+            return $this->json($conteneur, 200);
+
+        } else return $this->json(false, 200);
+    }
 
 }
