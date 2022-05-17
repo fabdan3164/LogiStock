@@ -22,7 +22,7 @@
                         Stock
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{{ path('app_stock_index') }}">État des Stock</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_conteneur_index') }}">État des Stock</a></li>
                         <li><a class="dropdown-item" href="{{ path('app_flux') }}">Mouvement de stock</a></li>
                         <li><a class="dropdown-item" href="{{ path('app_produit_index') }}">Liste des Produits</a></li>
                     </ul>
@@ -34,7 +34,7 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{{ path('app_conteneur_new') }}">Réceptionner des produits</a></li>
                         <li><a class="dropdown-item" href="{{ path('app_conteneur_select') }}">Déplacer</a></li>
-                        <li><a class="dropdown-item" href="#">Préparer une commande</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_commande_select') }}">Préparer une commande</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">

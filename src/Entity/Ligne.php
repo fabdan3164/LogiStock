@@ -28,6 +28,8 @@ class Ligne
     #[ORM\JoinColumn(nullable: false)]
     private $idCommande;
 
+    public array|null $conteneur = null ;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -80,4 +82,11 @@ class Ligne
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->id;
+    }
+
+
 }

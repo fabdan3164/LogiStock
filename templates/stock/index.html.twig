@@ -11,6 +11,7 @@
                 <th>Id</th>
                 <th>AdresseStock</th>
                 <th>MultiStockage</th>
+                <th>Code Conteneur</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -19,6 +20,7 @@
             <tr>
                 <td>{{ stock.id }}</td>
                 <td>{{ stock.adresseStock }}</td>
+                <td>{{ stock.getConteneurs }}</td>
                 <td>{{ stock.multiStockage ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('app_stock_show', {'id': stock.id}) }}">show</a>

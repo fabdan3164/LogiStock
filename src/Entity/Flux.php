@@ -22,7 +22,7 @@ class Flux
     #[ORM\Column(type: 'datetime')]
     private $dateFlux;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $origine;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

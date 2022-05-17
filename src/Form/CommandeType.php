@@ -13,8 +13,6 @@ class CommandeType extends AbstractType
     {
         $builder
             ->add('numeroCommande')
-            ->add('dateCommande')
-            ->add('idStatut')
         ;
     }
 

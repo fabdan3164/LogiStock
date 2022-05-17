@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Préparer une commande{% endblock %}
+
+{% block body %}
+    <h1>Commande {{ commande }}</h1>
+    <div class="row justify-content-center">
+
+        {% if lignes %}
+            <div class="card col-12 m-2" style="width: 18rem;">
+                <img class="card-img-top p-3" src="{{ asset("img/preparation-icon.png") }}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{ lignes[0].idProduit.denomination }} </h5>
+                    <p class="card-text">Rendez vous à l'adresse {{ lignes[0].conteneur[0].idStock }}
+                        prélever {{ lignes[0].quantite }} {{ lignes[0].idProduit.denomination }} dans le
+                        conteneur {{ lignes[0].conteneur[0].codeConteneur }} part
+                        number {{ lignes[0].idProduit.PartNumber }}   </p>
+
+
+                    <a class="btn btn-primary"
+                       href="{{ path('app_ligne_statut', {'id': lignes[0].id, 'idConteneur': lignes[0].conteneur[0].id} ) }}">Valider</a>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if lignes == null %}
+            <div class="card col-12 m-2" style="width: 18rem;">
+                <img class="card-img-top p-3" src="{{ asset("img/preparation-icon.png") }}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Commande terminée </h5>
+                    <p class="card-text"></p>
+                    <a class="btn btn-primary" href="{{ path('app_commande_select') }}">Sélectionner une commande</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

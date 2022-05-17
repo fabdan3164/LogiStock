@@ -15,7 +15,7 @@ class Commande
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'string')]
     private $numeroCommande;
 
     #[ORM\Column(type: 'datetime')]
