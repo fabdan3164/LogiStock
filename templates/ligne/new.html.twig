@@ -11,10 +11,48 @@
             </button>
         </div>
     {% endfor %}
-    <h1>Create new Ligne</h1>
+    <h1 class="text-center">Commander</h1>
 
-    {{ include('ligne/_form.html.twig') }}
 
-    <a href="{{ path('app_produit_index') }}">Retour a la liste produit</a>
+
+<div class="container" style="margin-top:50px;">
+    <div class="row justify-content-center">
+        <div class="col-md-3">
+            <div class="card-sl">
+                <div class="card-image">
+                    <img
+                            alt="no-image"   src="{{ asset("img/no_image.png") }}" />
+                </div>
+
+                <a class="card-action" href="{{ path('app_produit_index') }}"><i class="fa fa-heart"></i></a>
+                <div class="card-heading">
+                    {{ ligne.idProduit}} {{ ligne.idProduit.denomination}}
+                </div>
+                <div class="card-text">
+                    {{ ligne.idProduit.description}}
+                    <br>
+                    Prix unitaire : {{ ligne.idProduit.prixUnitaire}} €
+                </div>
+
+
+                <div class="card-text">
+                    {{ form_start(form,{'name': 'formNewLigne'}) }}
+                    {{ form_widget(form.quantite , {'attr': {'class': ' form-control'}}) }}
+                    {{ form_end(form) }}
+                </div>
+
+                <a type="submit" class="card-button" onclick="validation()"> Valider</a>
+
+            </div>
+        </div>
+    </div>
+
+<script>
+    function validation() {
+        document.forms["formNewLigne"].submit();
+    }
+</script>
+
+
 
 {% endblock %}

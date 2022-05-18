@@ -70,20 +70,27 @@ class LigneController extends AbstractController
         $form->handleRequest($request);
 
         //Recuperer la quantité total en stock
-        $conteneurTotal = $conteneurRepository->findBy(['idProduit'=>$id]);
+        $conteneurTotal = $conteneurRepository->findBy(['idProduit' => $id]);
         $quantiteEnStock = 0;
-            foreach ($conteneurTotal as $conteneur){
-                $quantiteEnStock += $conteneur->getQuantite();
-            }
+        foreach ($conteneurTotal as $conteneur) {
+            $quantiteEnStock += $conteneur->getQuantite();
+        }
+
+        //Soustraire la quantité totale deja commandé
+        $commandesTotal = $ligneRepository->findBy(['idProduit' => $id,'idStatut'=> [1,2,4]]);
+        foreach ($commandesTotal as $commande) {
+            $quantiteEnStock -= $commande->getQuantite();
+        }
+
 
         //Si la quantité commandée est supérieur à celle stocké renvoyer un addFlash
-            if($form['quantite']->getData() > $quantiteEnStock){
+        if ($form['quantite']->getData() > $quantiteEnStock) {
 
-                // Add Flash d'alerte
-                $this->addFlash('surStock', 'Désolé vous ne pouvez pas commander plus de '.$quantiteEnStock.' unités du produit '.$produitRepository->find($id) );
+            // Add Flash d'alerte
+            $this->addFlash('surStock', 'Désolé vous ne pouvez pas commander plus de ' . $quantiteEnStock . ' unités du produit ' . $produitRepository->find($id));
 
-                return $this->redirectToRoute('app_ligne_new', ['id'=>$id], Response::HTTP_SEE_OTHER);
-            }
+            return $this->redirectToRoute('app_ligne_new', ['id' => $id], Response::HTTP_SEE_OTHER);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -96,7 +103,7 @@ class LigneController extends AbstractController
         return $this->renderForm('ligne/new.html.twig', [
             'ligne' => $ligne,
             'form' => $form,
-            'produit'=>$produitRepository->find($id),
+            'produit' => $produitRepository->find($id),
         ]);
     }
 
@@ -109,17 +116,42 @@ class LigneController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_ligne_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Ligne $ligne, LigneRepository $ligneRepository): Response
+    public function edit($id, Request $request, Ligne $ligne, LigneRepository $ligneRepository, ConteneurRepository $conteneurRepository): Response
     {
         $form = $this->createForm(LigneType::class, $ligne);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //Récupérer la quantité total en stock
+            $conteneurTotal = $conteneurRepository->findBy(['idProduit' => $ligne->getIdProduit()->getId()]);
+            $quantiteEnStock = 0;
+            foreach ($conteneurTotal as $conteneur) {
+                $quantiteEnStock += $conteneur->getQuantite();
+            }
+
+            //Soustraire la quantité totale deja commandé et dont les commande n'ont pas été préparé
+            $commandesTotal = $ligneRepository->findBy(['idProduit' => $ligne->getIdProduit()->getId(),'idStatut'=> [1,2,4] ]);
+
+            foreach ($commandesTotal as $commande) {
+                $quantiteEnStock -= $commande->getQuantite();
+            }
+
+
+            //Si la quantité commandée est supérieur à celle stocké renvoyer un addFlash
+            if (($form['quantite']->getData()) > $quantiteEnStock) {
+
+                $quantiteEnStock = $quantiteEnStock+$ligne->getQuantite();
+                // Add Flash d'alerte
+                $this->addFlash('surStock', 'Désolé vous ne pouvez pas commander plus de ' . $quantiteEnStock . ' unités de ce produit.');
+
+                return $this->redirectToRoute('app_ligne_edit', ['id' => $id], Response::HTTP_SEE_OTHER);
+            }
+
             $ligneRepository->add($ligne, true);
 
-            return $this->redirectToRoute('app_ligne_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_commande_show', ['id'=>$ligne->getIdCommande()->getId()], Response::HTTP_SEE_OTHER);
         }
-
 
         return $this->renderForm('ligne/edit.html.twig', [
             'ligne' => $ligne,
@@ -139,15 +171,14 @@ class LigneController extends AbstractController
 
 
     #[Route('validationPreparation/{id}/{idConteneur}', name: 'app_ligne_statut', methods: ['GET'])]
-    public function statut($idConteneur, Request $request, Ligne $ligne, LigneRepository $ligneRepository, StatutRepository $statutRepository, ConteneurRepository $conteneurRepository,FluxRepository $fluxRepository): Response
+    public function statut($idConteneur, Ligne $ligne, LigneRepository $ligneRepository, StatutRepository $statutRepository, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository): Response
     {
 
         $quantite = $ligne->getQuantite();
         $conteneur = $conteneurRepository->find($idConteneur);
         $conteneur->setQuantite($conteneur->getQuantite() - $quantite);
 
-        $ligne->setIdStatut($statutRepository->find(3));
-
+        $ligne->setIdStatut($statutRepository->find(4));
 
         $flux = new Flux();
         $flux->setQuantite($quantite * -1);
@@ -160,13 +191,13 @@ class LigneController extends AbstractController
         $conteneurRepository->add($conteneur);
 
         // Si le conteneur est vide le supprimer
-        if($conteneur->getQuantite()===0){
+        if ($conteneur->getQuantite() === 0) {
             $conteneurRepository->remove($conteneur);
         }
 
         $ligneRepository->add($ligne, true);
         $fluxRepository->add($flux, true);
-        return $this->redirectToRoute('app_commande_preparation', ['id' => $ligne->getIdCommande()->getId()]);
+        return $this->redirectToRoute('app_commande_preparation', ['id' => $ligne->getIdCommande()->getId()], Response::HTTP_SEE_OTHER);
     }
 
 

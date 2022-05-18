@@ -9,8 +9,9 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>NumeroCommande</th>
-                <th>DateCommande</th>
+                <th>Numéro de Commande</th>
+                <th>Date de Commande</th>
+                <th>Statut</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -19,10 +20,12 @@
             <tr>
                 <td>{{ commande.id }}</td>
                 <td>{{ commande.numeroCommande }}</td>
+                <td>{{ commande.idStatut }}</td>
                 <td>{{ commande.dateCommande ? commande.dateCommande|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_commande_show', {'id': commande.id}) }}">show</a>
                     <a href="{{ path('app_commande_edit', {'id': commande.id}) }}">edit</a>
+                    <a href="{{ path('app_commande_print', {'id': commande.id}) }}">print</a>
                 </td>
             </tr>
         {% else %}

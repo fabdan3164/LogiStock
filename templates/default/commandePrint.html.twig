@@ -1,0 +1,253 @@
+<style>
+    table
+    {
+        width: 100%;
+        border-collapse:collapse;
+        font-size:16px}
+
+    .header td
+    {
+        width: 50%;
+        vertical-align: top}
+
+    .text-left
+    {
+        text-align: left}
+
+    .text-right
+    {
+        text-align: right}
+
+    .text-center
+    {
+        text-align: center}
+
+
+
+    .content td
+    {
+        border:solid 1px #CFD1D2;
+        padding: 5px;
+    }
+
+    .content th
+    {
+        border:solid 1px #000000;
+        padding: 5px;
+        background-color: #000000;
+        color: #FFFFFF}
+
+    .ligne1Content
+    {
+        background-color:#57B223}
+
+    .couleurgris
+    {
+        background-color:#DDDDDD;
+        height:auto;
+    }
+
+
+
+    .couleurverte
+    {
+        background-color: #57B223}
+
+    .couleurmoinsgris
+    {
+        background: #EEEEEE;
+    }
+
+    .taille1
+    {
+        width:40%;
+    }
+
+    .taille2
+    {
+        width:15%;
+    }
+
+    .taille3
+    {
+        width:15%;
+    }
+
+    .taille4
+    {
+        width:20%;
+    }
+
+    .taille5
+    {
+        width:10%;
+    }
+
+
+    .taille1, taille2, taille3, taille4, taille5
+    {
+        height:auto;
+    }
+
+    span
+    {
+        font-size:14px;
+        font-weight:bold;
+        color:#57B223;
+    }
+
+    h1, h2, h3
+    {
+        color:#57B223;
+    }
+
+    .colorwhite
+    {
+        color:white}
+</style>
+<body>
+<table class="header">
+    <tr>
+        <td class="text-lef">
+            <h1>Facture </h1>
+            <br>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left">
+            <span>DE</span>
+            <br/>
+            Logistock
+            <br/>
+            33 allée de Perlinpinpin 31300 Toulouse
+            <br/>
+            0567678798
+            <br/>
+            serviceclient@logistcok.com
+        </td>
+        <td class="text-right">
+            <span>FACTURE N°:</span>
+            {{ commande.numeroCommande }}
+            <br/>
+            <br/>
+            <span>DATE: </span>
+            {{  commande.dateCommande|date('Y-m-d H:i:s')  }}
+            <br/>
+            <br/>
+            <span>N° TVA:</span>
+            FR 32 123456789
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left">
+            <br/>
+            <br/>
+
+            <br/>
+            <br/>
+            <span>FACTURÉ À</span>
+            <br/>
+            {{ commande.idUtilisateur}} {{ commande.idUtilisateur.prenom}}
+            <br/>
+            {{ commande.idUtilisateur.adresse}}
+            <br/>
+            {{ commande.idUtilisateur.telephone}}
+            <br/>
+            {{ commande.idUtilisateur.email}}
+            <br/>
+            <br/>
+        </td>
+        <td class="text-right"></td>
+    </tr>
+</table>
+<table class="content">
+    <thead>
+    <tr class="ligne1Content">
+        <td class="text-left couleurgris taille1">
+            <b>DESIGNATION</b>
+        </td>
+        <td class="text-center couleurmoinsgris taille2">
+            <b>QUANTITE</b>
+        </td>
+        <td class="text-center couleurgris taille3">
+            <b>PRIX HT</b>
+        </td>
+        <td class="text-center couleurgris taille5">
+            <b>TAXE</b>
+        </td>
+        <td class="text-center couleurverte taille4 colorwhite">
+            <b>TOTAL HT</b>
+        </td>
+    </tr>
+    </thead>
+    <tbody>
+{% for ligne in lignes %}
+    <tr class="couleurgris">
+        <td class="text-left couleurgris taille1">
+{{ ligne.idproduit.denomination }}
+        </td>
+        <td class="text-center couleurmoinsgris taille2">
+            {{ ligne.quantite }}
+        </td>
+        <td class="text-center taille3">
+            {{ ligne.idproduit.prixUnitaire }} €
+        </td>
+        <td class="text-center taille5">
+            20%
+        </td>
+        <td class="text-center couleurverte taille4 colorwhite">
+            {{ ligne.quantite * ligne.idproduit.prixUnitaire  }} €
+        </td>
+    </tr>
+{% endfor %}
+
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="4" class="text-right tht">
+            TOTAL HT
+        </td>
+        <td class="tht text-center">
+            {% set sum = 0 %}
+            {% for ligne in lignes %}
+
+   {%  set sum = sum + (ligne.quantite * ligne.idproduit.prixUnitaire)  %}
+
+            {% endfor %}
+{{ sum }} €
+
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" class="text-right tht">
+            TAXE à  20%
+        </td>
+        <td class="text-center">
+            {{ sum *0.2}} €
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" class="text-right">
+            <h3>TOTAL TTC À PAYER</h3>
+        </td>
+        <td class="text-center">
+            <h3>       {{ sum *1.2}} €</h3>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <span>CONDITIONS ET MOYENS DE PAIEMENT:</span>
+            <br/>
+            Date de règlement : {{ commande.dateCommande |date_modify("+30 day")|date('Y-m-d') }}
+            <br/>
+            Taux des pénalités exigibles à compter du 1er avril 2022 en l'absence de paiement dans les délais
+            (voir rubrique indices et chiffres).
+            <br/>
+            Indemnité forfaitaire pour frais de recouvrement en cas de retard de paiement : 40 €
+        </td>
+    </tr>
+    </tfoot>
+</table>
+
+
+</body>

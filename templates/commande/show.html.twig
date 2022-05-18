@@ -3,28 +3,96 @@
 {% block title %}Commande{% endblock %}
 
 {% block body %}
-    <h1>Commande</h1>
+    <h1>Panier</h1>
 
     <table class="table">
+        <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Modifier</th>
+            <th>Statut</th>
+            <th>Quantite</th>
+            <th>Prix Unitaire</th>
+            <th>Total</th>
+        </tr>
+        </thead>
         <tbody>
+        {% for ligne in lignes %}
             <tr>
-                <th>Id</th>
-                <td>{{ commande.id }}</td>
+                <td>{{ ligne.idProduit }} - {{ ligne.idProduit.denomination }}</td>
+                <td> <a class="btn " href="{{ path('app_ligne_edit' , {'id': ligne.id}) }}">Modifier</a></td>
+                <td>{{ ligne.idStatut }}</td>
+                <td>{{ ligne.quantite }}</td>
+                <td>{{ ligne.idProduit.prixUnitaire }}</td>
+                <td>{{ ligne.quantite * ligne.idproduit.prixUnitaire }} €</td>
             </tr>
+        {% else %}
             <tr>
-                <th>NumeroCommande</th>
-                <td>{{ commande.numeroCommande }}</td>
+                <td colspan="3">no records found</td>
             </tr>
-            <tr>
-                <th>DateCommande</th>
-                <td>{{ commande.dateCommande ? commande.dateCommande|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
+        {% endfor %}
+
+        <tfoot>
+        <tr>
+            <td >
+            </td>
+            <td >
+            </td>
+            <td >
+            </td>
+            <td >
+                TOTAL HT
+            </td>
+            <td >
+                {% set sum = 0 %}
+                {% for ligne in lignes %}
+
+                    {%  set sum = sum + (ligne.quantite * ligne.idproduit.prixUnitaire)  %}
+
+                {% endfor %}
+                {{ sum }} €
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <td >
+            </td>
+            <td >
+            </td>
+            <td >
+                TAXE à  20%
+            </td>
+            <td>
+                {{ sum *0.2}} €
+            </td>
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <td >
+            </td>
+            <td >
+            </td>
+            <td >
+                TOTAL TTC À PAYER
+            </td>
+            <td>
+                 {{ sum *1.2}} €
+            </td>
+        </tr>
+        </tfoot>
         </tbody>
     </table>
 
-    <a href="{{ path('app_commande_index') }}">back to list</a>
 
-    <a href="{{ path('app_commande_edit', {'id': commande.id}) }}">edit</a>
+
+{% if commande.idStatut.id == 4 %}
+    <a class="btn btn-success m-3" href="{{ path('app_commande_valide' , {'id': commande.id}) }}">Valider</a>
 
     {{ include('commande/_delete_form.html.twig') }}
+    {% endif %}
+
+
 {% endblock %}

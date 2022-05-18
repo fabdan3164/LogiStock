@@ -37,7 +37,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'text', nullable: true)]
     private $adresse;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private $telephone;
 
     #[ORM\Column(type: 'text', nullable: true)]

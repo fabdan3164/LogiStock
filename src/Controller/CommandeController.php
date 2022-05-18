@@ -12,6 +12,8 @@ use App\Repository\LigneRepository;
 use App\Repository\ProduitRepository;
 use App\Repository\StatutRepository;
 use DateTime;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,8 +49,7 @@ class CommandeController extends AbstractController
         foreach ($lignes as $ligne) {
             $ligne->conteneur = $conteneurRepository->findBy(['idProduit' => $ligne->getIdProduit()], ['idStock' => 'ASC'], 1);
 
-
-            //Si la quantité est supérieur à la quantité dans le conteneur, supprimer la ligne et en créer une autre
+            //Si la quantité commandée est supérieur à la quantité dans le conteneur, supprimer la ligne et en créer une autre
             if ($ligne->getQuantite() > $ligne->conteneur[0]->getQuantite()) {
 
                 $ligne2 = new Ligne();
@@ -77,6 +78,13 @@ class CommandeController extends AbstractController
             $commandeRepository->add($commande , true);
         }
 
+        // Passer le statut de la commande à en cours
+        $commande = $commandeRepository->find($id);
+        if($commande->getIdStatut() !== $statutRepository->find(2)){
+            $commande->setIdStatut($statutRepository->find(2));
+            $commandeRepository->add($commande, true);
+        }
+
         // Retourner la vue pour continuer la préparation
         return $this->render('commande/preparation.html.twig', [
             'commande' => $commandeRepository->find($id),
@@ -100,7 +108,6 @@ class CommandeController extends AbstractController
         //Définir le statut En cours de commande
         $commande->setIdStatut($statutRepository->find(1));
 
-
         $form = $this->createForm(CommandeType::class, $commande);
         $form->handleRequest($request);
 
@@ -117,11 +124,25 @@ class CommandeController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_commande_show', methods: ['GET'])]
-    public function show(Commande $commande): Response
+    public function show(Commande $commande, LigneRepository $ligneRepository): Response
     {
+        $lignes = $ligneRepository->findBy(['idCommande'=> $commande->getId()]);
+
         return $this->render('commande/show.html.twig', [
             'commande' => $commande,
+            'lignes'=> $lignes
         ]);
+    }
+
+    #[Route('/{id}/valide', name: 'app_commande_valide', methods: ['GET'])]
+    public function valide(Commande $commande, LigneRepository $ligneRepository, StatutRepository $statutRepository, CommandeRepository $commandeRepository): Response
+    {
+        $commande ->setIdStatut($statutRepository->find(1));
+        $commandeRepository->add($commande, true);
+
+        $lignes = $ligneRepository->findBy(['idCommande'=> $commande->getId()]);
+
+        return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/edit', name: 'app_commande_edit', methods: ['GET', 'POST'])]
@@ -151,6 +172,48 @@ class CommandeController extends AbstractController
 
         return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    #[Route('/{id}/pdf', name: 'app_commande_print', methods: ['GET'])]
+    public function printPdf($id, CommandeRepository $commandeRepository, LigneRepository $ligneRepository): Response
+    {
+        $commande = $commandeRepository->find($id);
+        $lignes = $ligneRepository->findBy(['idCommande'=>$commande]);
+
+        return new Response($this->commandePdf($commande, $lignes), 200, ['Content-Type' => 'application/pdf',]);
+    }
+
+    private function commandePdf($commande, $lignes)
+    {
+        // Configure Dompdf according to your needs
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+
+        // Retrieve the HTML generated in our twig file
+        $html = $this->renderView('default/commandePrint.html.twig', [
+            'commande' => $commande,
+            'lignes'=> $lignes
+        ]);
+
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (inline view)
+        $dompdf->stream("mypdf.pdf", [
+            "Attachment" => false
+        ]);
+    }
+
+
 
 //    #[Route('/json/{numeroCommande}', name: 'app_commande_json', methods: [ 'GET', 'POST'])]
 //    public function jsonCommande(Request $request, CommandeRepository $commandeRepository): Response

@@ -3,8 +3,8 @@
 {% block title %}Commande a préparer{% endblock %}
 
 {% block body %}
-    <h1>Commande a préparer</h1>
-
+    <h1>Commandes à préparer</h1>
+{% if commandes %}
     <form name="commandeSelect">
         <label> Selection une commande</label>
         <select id="selectCommande">
@@ -15,8 +15,11 @@
     </form>
         <button type="button" onclick="preparer()"> Lancer la préparation</button>
 
-
+{% else %}
+<h2> Aucune commande a préparer </h2>
+{% endif %}
 <script>
+
  function preparer (){
      let input = document.getElementById("selectCommande").value
      window.location.href = window.location.href+ '/'+input;

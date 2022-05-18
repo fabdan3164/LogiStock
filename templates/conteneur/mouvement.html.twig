@@ -12,19 +12,44 @@
         </div>
     {% endfor %}
 
-    <h2>{{ conteneur.codeConteneur }}</h2>
-    <h2>{{ conteneur.idStock }}</h2>
-    <h2>{{ conteneur.idProduit.partNumber }} - {{ conteneur.idProduit.denomination }}</h2>
+<div class="container" style="margin-top:50px;">
+    <div class="row justify-content-center">
+        <div class="col-md-3">
+            <div class="card-sl">
+                <div class="card-image">
+                    <img
+                            alt="no-image"   src="{{ asset("img/no_image.png") }}" />
+                </div>
 
-    {{ form_start(form, {'name': 'formValidate'} ) }}
-    {{ form_widget(form.idStock, {'id': 'idSelect'} ) }}
-    {{ form_end(form) }}
+                <a class="card-action" href="{{ path('app_conteneur_select') }}"><i class="fa-solid fa-backward"></i></a>
+                <div class="card-heading">
+                    {{ conteneur.codeConteneur }}
+                </div>
+                <div class="card-text">
+                   Adresse actuel :  {{ conteneur.idStock }}
+                    <br>
+                    {{ conteneur.idProduit.partNumber }} - {{ conteneur.idProduit.denomination }}
+                </div>
 
-    <label for="adresseSaisie">Scanner/Saisir l'adresse de stockage</label>
-    <input id="adresseSaisie" type="text">
-    <button type="button" onclick="adresseControl()">Valider</button>
 
-    <a href="{{ path('app_conteneur_index') }}">back to list</a>
+                <div class="card-text">
+                    {{ form_start(form, {'name': 'formValidate'} ) }}
+                    {{ form_widget(form.idStock, {'id': 'idSelect', 'attr': {'class': 'invisible'}} ) }}
+                    {{ form_end(form) }}
+
+
+                    <label for="adresseSaisie">Scanner/Saisir la nouvelle adresse de stockage</label>
+                    <input id="adresseSaisie" type="text" class="form-control">
+                </div>
+
+
+                <a type="submit" class="card-button" onclick="adresseControl()"> Valider</a>
+
+            </div>
+        </div>
+    </div>
+
+
     <script>
 
         // fonction pour valider l'existence de l'adresse dans la base de donnée via une API
