@@ -97,7 +97,7 @@ class LigneController extends AbstractController
             $ligne->setQuantite($form['quantite']->getData());
             $ligneRepository->add($ligne, true);
 
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_main', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('ligne/new.html.twig', [
@@ -185,6 +185,7 @@ class LigneController extends AbstractController
         $flux->setDateFlux(new DateTime());
         $flux->setOrigine($ligne->getIdCommande()->getNumeroCommande());
         $flux->setType('PRÉPARATION - COMMANDE');
+        $flux->setPartNumber($conteneur->getIdProduit());
         $flux->setCodeConteneur($conteneur->getCodeConteneur());
         $flux->setAdresseStock($conteneur->getIdStock());
 

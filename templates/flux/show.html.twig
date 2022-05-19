@@ -22,7 +22,7 @@
     <tbody>
     {% for mouvement in flux %}
         <tr>
-            <td><a href="{{ path('app_flux_show' , {'codeConteneur': mouvement.codeConteneur}) }}">{{ mouvement.codeConteneur}}</a></td>
+            <td>{{ mouvement.codeConteneur}}</td>
             <td>{{ mouvement.type }}</td>
             <td>{{ mouvement.quantite }}</td>
             <td>{{ mouvement.partNumber }}</td>

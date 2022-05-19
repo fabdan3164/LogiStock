@@ -16,9 +16,9 @@
     <div class="row justify-content-center">
         <div class="col-md-3">
             <div class="card-sl">
-                <div class="card-image">
+                <div class="card-image border border-white">
                     <img
-                            alt="no-image"   src="{{ asset("img/no_image.png") }}" />
+                            alt="no-image"   src="{{ asset("img/move.svg") }}" />
                 </div>
 
                 <a class="card-action" href="{{ path('app_conteneur_select') }}"><i class="fa-solid fa-backward"></i></a>
@@ -29,6 +29,8 @@
                    Adresse actuel :  {{ conteneur.idStock }}
                     <br>
                     {{ conteneur.idProduit.partNumber }} - {{ conteneur.idProduit.denomination }}
+                    <br>
+                    Quantité actuel : {{ conteneur.quantite }}
                 </div>
 
 

@@ -30,7 +30,7 @@
                     <h5 class="card-title">Commande terminée </h5>
                     <p class="card-text"></p>
                     <a class="btn btn-primary" href="{{ path('app_commande_select') }}">Sélectionner une commande</a>
-                    <a class="btn btn-primary" href="{{ path('app_commande_print') }}">Imprimer le bon de commande</a>
+                    <a class="btn btn-primary" href="{{ path('app_commande_print', {'id': commande.id})  }}">Imprimer le bon de commande</a>
                 </div>
             </div>
         {% endif %}

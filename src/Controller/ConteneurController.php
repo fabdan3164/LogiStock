@@ -62,6 +62,7 @@ class ConteneurController extends AbstractController
             $flux = new Flux();
             $flux->setDateFlux(new DateTime());
             $flux->setQuantite($form['quantite']->getData());
+            $flux->setPartNumber( $conteneur->getIdProduit());
             $flux->setType("RECEPTION");
             $flux->setOrigine($conteneur->getIdReception()->getBonDeCommande());
             $flux->setAdresseStock($conteneur->getIdStock()->getAdresseStock());
@@ -141,6 +142,7 @@ class ConteneurController extends AbstractController
             $flux1->setDateFlux(new DateTime());
             $flux1->setQuantite($conteneur->getQuantite() * -1);
             $flux1->setType("DÉPLACEMENT");
+            $flux1->setPartNumber($conteneur->getIdProduit());
             $flux1->setAdresseStock($adresse);
             $flux1->setCodeConteneur($conteneur->getCodeConteneur());
 
@@ -149,6 +151,7 @@ class ConteneurController extends AbstractController
             $flux2->setDateFlux(new DateTime());
             $flux2->setQuantite($conteneur->getQuantite());
             $flux2->setType("DÉPLACEMENT");
+            $flux2->setPartNumber($conteneur->getIdProduit());
             $flux2->setAdresseStock($form['idStock']->getData());
             $flux2->setCodeConteneur($conteneur->getCodeConteneur());
 

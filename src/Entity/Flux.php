@@ -31,6 +31,9 @@ class Flux
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private $codeConteneur;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $partNumber;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +107,18 @@ class Flux
     public function setCodeConteneur(?string $codeConteneur): self
     {
         $this->codeConteneur = $codeConteneur;
+
+        return $this;
+    }
+
+    public function getPartNumber(): ?string
+    {
+        return $this->partNumber;
+    }
+
+    public function setPartNumber(?string $partNumber): self
+    {
+        $this->partNumber = $partNumber;
 
         return $this;
     }
