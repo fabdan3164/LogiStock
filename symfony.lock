@@ -110,6 +110,9 @@
     "phpstan/phpdoc-parser": {
         "version": "1.5.1"
     },
+    "picqer/php-barcode-generator": {
+        "version": "v2.2.2"
+    },
     "psr/cache": {
         "version": "3.0.0"
     },

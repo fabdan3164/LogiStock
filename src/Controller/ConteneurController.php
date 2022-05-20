@@ -12,6 +12,7 @@ use App\Repository\StockRepository;
 use DateTime;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +32,7 @@ class ConteneurController extends AbstractController
 
 
     #[Route('/select', name: 'app_conteneur_select', methods: ['GET'])]
-    public function selectConteneur( ConteneurRepository $conteneurRepository): Response
+    public function selectConteneur(ConteneurRepository $conteneurRepository): Response
     {
         return $this->render('conteneur/select.html.twig', [
         ]);
@@ -62,7 +63,7 @@ class ConteneurController extends AbstractController
             $flux = new Flux();
             $flux->setDateFlux(new DateTime());
             $flux->setQuantite($form['quantite']->getData());
-            $flux->setPartNumber( $conteneur->getIdProduit());
+            $flux->setPartNumber($conteneur->getIdProduit());
             $flux->setType("RECEPTION");
             $flux->setOrigine($conteneur->getIdReception()->getBonDeCommande());
             $flux->setAdresseStock($conteneur->getIdStock()->getAdresseStock());
@@ -83,7 +84,8 @@ class ConteneurController extends AbstractController
     {
         return $this->render('conteneur/show.html.twig', [
             'conteneur' => $conteneur,
-        ]);
+        ]
+        );
     }
 
     #[Route('/{id}/edit', name: 'app_conteneur_edit', methods: ['GET', 'POST'])]
@@ -105,8 +107,6 @@ class ConteneurController extends AbstractController
     }
 
 
-
-
     #[Route('/select/{id}', name: 'app_conteneur_mouvement', methods: ['GET', 'POST'])]
     public function mouvement(Request $request, Conteneur $conteneur, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository): Response
     {
@@ -116,14 +116,14 @@ class ConteneurController extends AbstractController
 
 
         // Si l'emplacement de destination est deja occupé bloquer et ajouter un add flash
-        if ( $form->isSubmitted() && $conteneurRepository->findOneby(['idStock' => $form['idStock']->getData()]) && !$form['idStock']->getData()->isMultiStockage() ) {
+        if ($form->isSubmitted() && $conteneurRepository->findOneby(['idStock' => $form['idStock']->getData()]) && !$form['idStock']->getData()->isMultiStockage()) {
 
 
             //Reinitialise l'adresse de stockage pour affichage
             $conteneur->setIdStock($adresse);
 
             // Add Flash de validation
-            $this->addFlash('MouvementImpossible', 'L\'adresse de destination '. $form['idStock']->getData().' est deja occupé');
+            $this->addFlash('MouvementImpossible', 'L\'adresse de destination ' . $form['idStock']->getData() . ' est deja occupé');
 
 
             // Renvoie sur la vue pour une nouvelle saisie
@@ -184,7 +184,14 @@ class ConteneurController extends AbstractController
     #[Route('/{id}/pdf', name: 'app_conteneur_print', methods: ['GET'])]
     public function printPdf($id, ConteneurRepository $conteneurRepository): Response
     {
-        $conteneur = $conteneurRepository->find($id);
+        $conteneur=$conteneurRepository->find($id);
+
+        $blackColor = [0, 0, 0];
+        $dataBarcode = $conteneur->getCodeConteneur();
+        $generator = new BarcodeGeneratorPNG();
+
+        file_put_contents('barcode'.$dataBarcode.'.png', $generator->getBarcode($dataBarcode, 'C128', 3, 50, $blackColor), );
+
         return new Response($this->conteneurPdf($conteneur), 200, ['Content-Type' => 'application/pdf',]);
     }
 
@@ -193,6 +200,7 @@ class ConteneurController extends AbstractController
         // Configure Dompdf according to your needs
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->setIsRemoteEnabled(true);
 
         // Instantiate Dompdf with our options
         $dompdf = new Dompdf($pdfOptions);
@@ -215,9 +223,11 @@ class ConteneurController extends AbstractController
         $dompdf->stream("mypdf.pdf", [
             "Attachment" => false
         ]);
+
+        unlink('barcode'.$conteneur.'.png');
     }
 
-    #[Route('/json/{codeConteneur}', name: 'app_conteneur_json', methods: [ 'GET', 'POST'])]
+    #[Route('/json/{codeConteneur}', name: 'app_conteneur_json', methods: ['GET', 'POST'])]
     public function jsonConteneur(Request $request, ConteneurRepository $conteneurRepository): Response
     {
         $conteneur = $conteneurRepository->findby(['codeConteneur' => $request->get('codeConteneur')]);
