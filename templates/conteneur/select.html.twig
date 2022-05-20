@@ -7,36 +7,39 @@
     <label> Selection/Scanner un code Conteneur</label>
 
     <form>
-        <input id="codeConteneur" type="text" >
+        <input id="codeConteneur" onblur="test()" type="text">
         <button type="button" onclick="codeConteneurControl()">Valider</button>
     </form>
 
     <script>
+        //Récupérer l'input
+        let input = document.getElementById("codeConteneur");
+
+        //Focus sur l'input
+        input.focus();
 
         // fonction pour valider l'existence de l'adresse dans la base de donnée via une API
         function codeConteneurControl() {
 
-            //Récupérer l'input
-            let input = document.getElementById("codeConteneur").value
 
+            if (input.value) {
+                //Lancer le fetch sur l'URL de l'API
+                fetch(window.location.origin + '/conteneur/json/' + input.value)
+                    .then(result => result.json())
+                    .then(data => {
 
-            //Lancer le fetch sur l'URL de l'API
-            fetch(window.location.origin+'/conteneur/json/'+input)
-                .then(result => result.json())
-                .then(data => {
-
-                    // S'il n'y a pas de donnée dans l'API renvoyer un message d'erreur
-                    if (!data) {
-                        alert("Le Conteneur " + input + " n'existe pas.");
-                    }
-                    // Sinon renvoyer vers le lien
-                    else
-                        console.log(window.location.href)
-                    window.location.href = window.location.href+'/'+data[0].idConteneur;
-
-                    }
-
-                )
+                            // S'il n'y a pas de donnée dans l'API renvoyer un message d'erreur
+                            if (!data) {
+                                alert("Le Conteneur " + input.value + " n'existe pas.");
+                            }
+                            // Sinon renvoyer vers le lien
+                            else
+                                window.location.href = window.location.href + '/' + data[0].idConteneur;
+                        }
+                    )
+            } else {
+                input.focus();
+            }
         }
 
     </script>

@@ -174,12 +174,15 @@ class LigneController extends AbstractController
     public function statut($idConteneur, Ligne $ligne, LigneRepository $ligneRepository, StatutRepository $statutRepository, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository): Response
     {
 
+        //Ajuster les quantités sur le conteneur prélevé
         $quantite = $ligne->getQuantite();
         $conteneur = $conteneurRepository->find($idConteneur);
         $conteneur->setQuantite($conteneur->getQuantite() - $quantite);
 
+        //Définir le statut de la ligne comme étant préparé
         $ligne->setIdStatut($statutRepository->find(4));
 
+        //Enregistrer la sortie de stock dans la table flux
         $flux = new Flux();
         $flux->setQuantite($quantite * -1);
         $flux->setDateFlux(new DateTime());

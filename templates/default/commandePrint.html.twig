@@ -1,123 +1,115 @@
 <style>
-    table
-    {
+    table {
         width: 100%;
-        border-collapse:collapse;
-        font-size:16px}
+        border-collapse: collapse;
+        font-size: 16px
+    }
 
-    .header td
-    {
+    .header td {
         width: 50%;
-        vertical-align: top}
+        vertical-align: top
+    }
 
-    .text-left
-    {
-        text-align: left}
+    .text-left {
+        text-align: left
+    }
 
-    .text-right
-    {
-        text-align: right}
+    .text-right {
+        text-align: right
+    }
 
-    .text-center
-    {
-        text-align: center}
+    .text-center {
+        text-align: center
+    }
 
 
-
-    .content td
-    {
-        border:solid 1px #CFD1D2;
+    .content td {
+        border: solid 1px #CFD1D2;
         padding: 5px;
     }
 
-    .content th
-    {
-        border:solid 1px #000000;
+    .content th {
+        border: solid 1px #000000;
         padding: 5px;
         background-color: #000000;
-        color: #FFFFFF}
+        color: #FFFFFF
+    }
 
-    .ligne1Content
-    {
-        background-color:#57B223}
+    .ligne1Content {
+        background-color: #57B223
+    }
 
-    .couleurgris
-    {
-        background-color:#DDDDDD;
-        height:auto;
+    .couleurgris {
+        background-color: #DDDDDD;
+        height: auto;
     }
 
 
+    .couleurverte {
+        background-color: #57B223
+    }
 
-    .couleurverte
-    {
-        background-color: #57B223}
-
-    .couleurmoinsgris
-    {
+    .couleurmoinsgris {
         background: #EEEEEE;
     }
 
-    .taille1
-    {
-        width:40%;
+    .taille1 {
+        width: 40%;
     }
 
-    .taille2
-    {
-        width:15%;
+    .taille2 {
+        width: 15%;
     }
 
-    .taille3
-    {
-        width:15%;
+    .taille3 {
+        width: 15%;
     }
 
-    .taille4
-    {
-        width:20%;
+    .taille4 {
+        width: 20%;
     }
 
-    .taille5
-    {
-        width:10%;
+    .taille5 {
+        width: 10%;
     }
 
 
-    .taille1, taille2, taille3, taille4, taille5
-    {
-        height:auto;
+    .taille1, taille2, taille3, taille4, taille5 {
+        height: auto;
     }
 
-    span
-    {
-        font-size:14px;
-        font-weight:bold;
-        color:#57B223;
+    span {
+        font-size: 14px;
+        font-weight: bold;
+        color: #57B223;
     }
 
-    h1, h2, h3
-    {
-        color:#57B223;
+    h1, h2, h3 {
+        color: #57B223;
     }
 
-    .colorwhite
-    {
-        color:white}
+    .colorwhite {
+        color: white
+    }
+
+
 </style>
 <body>
 <table class="header">
     <tr>
-        <td class="text-lef">
-            <h1>Facture </h1>
+        <td class="text-left">
+            <h1 >Facture </h1>
+        </td>
+        <td class="text-right">
+            <br/>
 
-            <br>
+            <img src="{{ absolute_url('/') }}barcode{{ commande.numeroCommande }}.png" width="150px">
         </td>
     </tr>
     <tr>
         <td class="text-left">
             <span>DE</span>
-            <br/>
+
             Logistock
             <br/>
             33 allée de Perlinpinpin 31300 Toulouse
@@ -126,13 +118,16 @@
             <br/>
             serviceclient@logistcok.com
         </td>
+
         <td class="text-right">
+
+
             <span>FACTURE N°:</span>
             {{ commande.numeroCommande }}
             <br/>
             <br/>
             <span>DATE: </span>
-            {{  commande.dateCommande|date('Y-m-d H:i:s')  }}
+            {{ commande.dateCommande|date('d/m/Y') }}
             <br/>
             <br/>
             <span>N° TVA:</span>
@@ -143,18 +138,17 @@
         <td class="text-left">
             <br/>
             <br/>
-
             <br/>
             <br/>
             <span>FACTURÉ À</span>
             <br/>
-            {{ commande.idUtilisateur}} {{ commande.idUtilisateur.prenom}}
+            {{ commande.idUtilisateur }} {{ commande.idUtilisateur.prenom }}
             <br/>
-            {{ commande.idUtilisateur.adresse}}
+            {{ commande.idUtilisateur.adresse }}
             <br/>
-            {{ commande.idUtilisateur.telephone}}
+            {{ commande.idUtilisateur.telephone }}
             <br/>
-            {{ commande.idUtilisateur.email}}
+            {{ commande.idUtilisateur.email }}
             <br/>
             <br/>
         </td>
@@ -182,25 +176,25 @@
     </tr>
     </thead>
     <tbody>
-{% for ligne in lignes %}
-    <tr class="couleurgris">
-        <td class="text-left couleurgris taille1">
-{{ ligne.idproduit.denomination }}
-        </td>
-        <td class="text-center couleurmoinsgris taille2">
-            {{ ligne.quantite }}
-        </td>
-        <td class="text-center taille3">
-            {{ ligne.idproduit.prixUnitaire }} €
-        </td>
-        <td class="text-center taille5">
-            20%
-        </td>
-        <td class="text-center couleurverte taille4 colorwhite">
-            {{ ligne.quantite * ligne.idproduit.prixUnitaire  }} €
-        </td>
-    </tr>
-{% endfor %}
+    {% for ligne in lignes %}
+        <tr class="couleurgris">
+            <td class="text-left couleurgris taille1">
+                {{ ligne.idproduit.denomination }}
+            </td>
+            <td class="text-center couleurmoinsgris taille2">
+                {{ ligne.quantite }}
+            </td>
+            <td class="text-center taille3">
+                {{ ligne.idproduit.prixUnitaire }} €
+            </td>
+            <td class="text-center taille5">
+                20%
+            </td>
+            <td class="text-center couleurverte taille4 colorwhite">
+                {{ ligne.quantite * ligne.idproduit.prixUnitaire }} €
+            </td>
+        </tr>
+    {% endfor %}
 
     </tbody>
     <tfoot>
@@ -212,19 +206,19 @@
             {% set sum = 0 %}
             {% for ligne in lignes %}
 
-   {%  set sum = sum + (ligne.quantite * ligne.idproduit.prixUnitaire)  %}
+                {% set sum = sum + (ligne.quantite * ligne.idproduit.prixUnitaire) %}
 
             {% endfor %}
-{{ sum }} €
+            {{ sum }} €
 
         </td>
     </tr>
     <tr>
         <td colspan="4" class="text-right tht">
-            TAXE à  20%
+            TAXE à 20%
         </td>
         <td class="text-center">
-            {{ sum *0.2}} €
+            {{ sum *0.2 }} €
         </td>
     </tr>
     <tr>
@@ -232,7 +226,7 @@
             <h3>TOTAL TTC À PAYER</h3>
         </td>
         <td class="text-center">
-            <h3>       {{ sum *1.2}} €</h3>
+            <h3>       {{ sum *1.2 }} €</h3>
         </td>
     </tr>
     <tr>

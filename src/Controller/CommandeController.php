@@ -14,6 +14,7 @@ use App\Repository\StatutRepository;
 use DateTime;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -180,6 +181,15 @@ class CommandeController extends AbstractController
         $commande = $commandeRepository->find($id);
         $lignes = $ligneRepository->findBy(['idCommande'=>$commande]);
 
+
+        $blackColor = [0, 0, 0];
+        $dataBarcode = $commande->getNumeroCommande();
+        $generator = new BarcodeGeneratorPNG();
+
+        file_put_contents('barcode'.$dataBarcode.'.png', $generator->getBarcode($dataBarcode, 'C128', 3, 50, $blackColor), );
+
+
+
         return new Response($this->commandePdf($commande, $lignes), 200, ['Content-Type' => 'application/pdf',]);
     }
 
@@ -189,7 +199,7 @@ class CommandeController extends AbstractController
         // Configure Dompdf according to your needs
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
-
+        $pdfOptions->setIsRemoteEnabled(true);
 
         // Instantiate Dompdf with our options
         $dompdf = new Dompdf($pdfOptions);
@@ -213,6 +223,8 @@ class CommandeController extends AbstractController
         $dompdf->stream("mypdf.pdf", [
             "Attachment" => false
         ]);
+
+        unlink('barcode'.$commande.'.png');
     }
 
 

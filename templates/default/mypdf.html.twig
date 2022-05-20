@@ -20,7 +20,7 @@
     <br>
 
 <h2>{{ conteneur.codeConteneur }}</h2>
-    <img src="{{ absolute_url('/') }}barcode{{ conteneur.codeConteneur }}.png" alt="" width="400" height="100">
+    <img src="{{ absolute_url('/') }}barcode{{ conteneur.codeConteneur }}.png" alt="{{ conteneur.codeConteneur }}" width="400" height="100">
     <h2>{{ conteneur.idProduit.partNumber }} - {{ conteneur.idProduit.denomination }}</h2>
 
     <h2>{{ conteneur.dateReception|date('Y-m-d H:i:s') }}</h2>
