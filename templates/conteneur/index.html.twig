@@ -3,7 +3,20 @@
 {% block title %}Conteneur index{% endblock %}
 
 {% block body %}
-    <h1>Conteneur index</h1>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+            <h1 class="text-center">État des stocks</h1>
+            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+        </div>
+    </div>
+
+    <div class="container">
+        <div  class="row justify-content-end ">
+            <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+        </div>
+    </div>
 
     <table class="table">
         <thead>
@@ -23,9 +36,8 @@
                 <td>{{ conteneur.quantite }}</td>
                 <td>{{ conteneur.dateReception ? conteneur.dateReception|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_conteneur_show', {'id': conteneur.id}) }}">show</a>
-                    <a href="{{ path('app_conteneur_edit', {'id': conteneur.id}) }}">edit</a>
-                    <a href="{{ path('app_conteneur_mouvement', {'id': conteneur.id}) }}">Mouvement</a>
+                    <a href="{{ path('app_flux_show' , {'codeConteneur': conteneur.codeConteneur}) }}">Détail</a>
+                    <a href="{{ path('app_conteneur_edit', {'id': conteneur.id}) }}">Ajustement</a>
                 </td>
             </tr>
         {% else %}
@@ -36,5 +48,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_conteneur_new') }}">Create new</a>
 {% endblock %}

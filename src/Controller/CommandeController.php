@@ -35,7 +35,7 @@ class CommandeController extends AbstractController
     public function selectCommande(CommandeRepository $commandeRepository): Response
     {
         return $this->render('commande/select.html.twig', [
-            'commandes' => $commandeRepository->findby(['idStatut' => 1]),
+            'commandes' => $commandeRepository->findby(['idStatut' => [1, 2]]),
         ]);
     }
 
@@ -44,7 +44,7 @@ class CommandeController extends AbstractController
 
     {
         // Obtenir un tableau des lignes de commande à préparer
-        $lignes = $ligneRepository->findBy(['idCommande' => $id, 'idStatut' => '1']);
+        $lignes = $ligneRepository->findBy(['idCommande' => $id, 'idStatut' => 1]);
 
         // l'implementer avec les conteneurs dans lesquelles on va prélever
         foreach ($lignes as $ligne) {
@@ -61,7 +61,7 @@ class CommandeController extends AbstractController
                 $ligneRepository->add($ligne2, true);
 
                 $ligne->setQuantite($ligne->conteneur[0]->getQuantite());
-                $ligneRepository->add($ligne , true);
+                $ligneRepository->add($ligne, true);
             }
         }
 
@@ -76,12 +76,12 @@ class CommandeController extends AbstractController
         if (!$lignes) {
             $commande = $commandeRepository->find($id);
             $commande->setIdStatut($statutRepository->find(3));
-            $commandeRepository->add($commande , true);
+            $commandeRepository->add($commande, true);
         }
 
         // Passer le statut de la commande à en cours
         $commande = $commandeRepository->find($id);
-        if($commande->getIdStatut() !== $statutRepository->find(2)){
+        if ($commande->getIdStatut() !== $statutRepository->find(2)) {
             $commande->setIdStatut($statutRepository->find(2));
             $commandeRepository->add($commande, true);
         }
@@ -127,23 +127,45 @@ class CommandeController extends AbstractController
     #[Route('/{id}', name: 'app_commande_show', methods: ['GET'])]
     public function show(Commande $commande, LigneRepository $ligneRepository): Response
     {
-        $lignes = $ligneRepository->findBy(['idCommande'=> $commande->getId()]);
+        $lignes = $ligneRepository->findBy(['idCommande' => $commande->getId()]);
 
         return $this->render('commande/show.html.twig', [
             'commande' => $commande,
-            'lignes'=> $lignes
+            'lignes' => $lignes
         ]);
     }
 
     #[Route('/{id}/valide', name: 'app_commande_valide', methods: ['GET'])]
     public function valide(Commande $commande, LigneRepository $ligneRepository, StatutRepository $statutRepository, CommandeRepository $commandeRepository): Response
     {
-        $commande ->setIdStatut($statutRepository->find(1));
+        $commande->setIdStatut($statutRepository->find(1));
         $commandeRepository->add($commande, true);
 
-        $lignes = $ligneRepository->findBy(['idCommande'=> $commande->getId()]);
+        $lignes = $ligneRepository->findBy(['idCommande' => $commande->getId()]);
+
+        foreach ($lignes as $ligne) {
+            $ligne->setIdStatut($statutRepository->find(1));
+            $ligneRepository->add($ligne, true);
+        }
 
         return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/prepare', name: 'app_commande_prepare', methods: ['GET'])]
+    public function prepare(CommandeRepository $commandeRepository, StatutRepository $statutRepository, $id): Response
+    {
+
+        //Récupérer la commande en cours
+        $commande = $commandeRepository->find($id);
+
+        //En définir le statut à préparer
+        $commande->setIdStatut($statutRepository->find(3));
+
+        //MAJ statut commande
+        $commandeRepository->add($commande, true);
+
+        return $this->redirectToRoute('app_commande_select', [], Response::HTTP_SEE_OTHER);
+
     }
 
     #[Route('/{id}/edit', name: 'app_commande_edit', methods: ['GET', 'POST'])]
@@ -179,15 +201,14 @@ class CommandeController extends AbstractController
     public function printPdf($id, CommandeRepository $commandeRepository, LigneRepository $ligneRepository): Response
     {
         $commande = $commandeRepository->find($id);
-        $lignes = $ligneRepository->findBy(['idCommande'=>$commande]);
+        $lignes = $ligneRepository->findBy(['idCommande' => $commande]);
 
 
         $blackColor = [0, 0, 0];
         $dataBarcode = $commande->getNumeroCommande();
         $generator = new BarcodeGeneratorPNG();
 
-        file_put_contents('barcode'.$dataBarcode.'.png', $generator->getBarcode($dataBarcode, 'C128', 3, 50, $blackColor), );
-
+        file_put_contents('barcode' . $dataBarcode . '.png', $generator->getBarcode($dataBarcode, 'C128', 3, 50, $blackColor),);
 
 
         return new Response($this->commandePdf($commande, $lignes), 200, ['Content-Type' => 'application/pdf',]);
@@ -207,7 +228,7 @@ class CommandeController extends AbstractController
         // Retrieve the HTML generated in our twig file
         $html = $this->renderView('default/commandePrint.html.twig', [
             'commande' => $commande,
-            'lignes'=> $lignes
+            'lignes' => $lignes
         ]);
 
         // Load HTML to Dompdf
@@ -224,22 +245,10 @@ class CommandeController extends AbstractController
             "Attachment" => false
         ]);
 
-        unlink('barcode'.$commande.'.png');
+        unlink('barcode' . $commande . '.png');
     }
 
 
-
-//    #[Route('/json/{numeroCommande}', name: 'app_commande_json', methods: [ 'GET', 'POST'])]
-//    public function jsonCommande(Request $request, CommandeRepository $commandeRepository): Response
-//    {
-//        $commande = $commandeRepository->findby(['numeroCommande' => $request->get('numeroCommande')]);
-//        json_encode($commande);
-//        if ($commande) {
-//
-//            return $this->json($commande, 200);
-//
-//        } else return $this->json(false, 200);
-//    }
 }
 
 

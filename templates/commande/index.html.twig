@@ -1,10 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Commande index{% endblock %}
+{% block title %}Commandes{% endblock %}
 
 {% block body %}
-    <h1>Commande index</h1>
+<div class="row align-items-center justify-content-center">
+    <img class="col-3" src="{{ asset('img/separator.svg') }}">
+    <h1 class="text-center" >Commandes</h1>
+    <img class="col-3" src="{{ asset('img/separator.svg') }}">
+</div>
 
+    <div  class="row justify-content-end">
+        <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+    </div>
     <table class="table">
         <thead>
             <tr>

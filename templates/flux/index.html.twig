@@ -3,18 +3,19 @@
 {% block title %}Mouvements de stock{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+
+    <div class="container">
 <div class="row justify-content-center">
-    <img class="col-4 mt-2" src="{{ asset('img/separatorBlack.svg') }}">
+    <img class="col-3" src="{{ asset('img/separator.svg') }}">
     <h1 class="text-center">Mouvements de stock</h1>
-    <img class="col-4 mb-2" src="{{ asset('img/separatorBlack.svg') }}">
-
-
+    <img class="col-3" src="{{ asset('img/separator.svg') }}">
 </div>
-    <div  class="row justify-content-end">
-    <input type="search" class="light-table-filter col-3" data-table="table" placeholder="Recherche">
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-end">
+            <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+        </div>
     </div>
 <table class="table table-striped mt-3 border-white">
     <thead>

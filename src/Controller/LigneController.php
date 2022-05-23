@@ -57,7 +57,7 @@ class LigneController extends AbstractController
             $commande = new Commande();
             $commande->setNumeroCommande(hexdec(uniqid()));
             $commande->setDateCommande(new DateTime());
-            $commande->setIdStatut($statutRepository->find(1));
+            $commande->setIdStatut($statutRepository->find(4));
             $commandeRepository->add($commande);
             $commande->setIdUtilisateur($user);
             $ligne->setIdCommande($commande);
@@ -171,7 +171,7 @@ class LigneController extends AbstractController
 
 
     #[Route('validationPreparation/{id}/{idConteneur}', name: 'app_ligne_statut', methods: ['GET'])]
-    public function statut($idConteneur, Ligne $ligne, LigneRepository $ligneRepository, StatutRepository $statutRepository, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository): Response
+    public function statut($idConteneur, Ligne $ligne, LigneRepository $ligneRepository, StatutRepository $statutRepository, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository,CommandeRepository $commandeRepository): Response
     {
 
         //Ajuster les quantités sur le conteneur prélevé
@@ -180,7 +180,7 @@ class LigneController extends AbstractController
         $conteneur->setQuantite($conteneur->getQuantite() - $quantite);
 
         //Définir le statut de la ligne comme étant préparé
-        $ligne->setIdStatut($statutRepository->find(4));
+        $ligne->setIdStatut($statutRepository->find(3));
 
         //Enregistrer la sortie de stock dans la table flux
         $flux = new Flux();
@@ -201,8 +201,10 @@ class LigneController extends AbstractController
 
         $ligneRepository->add($ligne, true);
         $fluxRepository->add($flux, true);
+
         return $this->redirectToRoute('app_commande_preparation', ['id' => $ligne->getIdCommande()->getId()], Response::HTTP_SEE_OTHER);
     }
+
 
 
 }

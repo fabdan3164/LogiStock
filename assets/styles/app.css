@@ -1,1 +1,15 @@
-@import "home.css";
+@import "cards.css";
+
+@import "navbar.css";
+
+@import "search.css";
+
+a {
+    color: rgba(77, 131, 135, 1);
+}
+
+body {
+    background: rgb(126,126,131);
+    background: linear-gradient(90deg, rgba(126,126,131,1) 0%, rgba(255,255,255,1) 52%, rgba(126,126,131,1) 100%);
+    font-family: Varela Round;
+}

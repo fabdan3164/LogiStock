@@ -1,15 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Conteneur Select{% endblock %}
+{% block title %}Déplacer un Conteneur{% endblock %}
 
 {% block body %}
-    <h1>Conteneur Select</h1>
-    <label> Selection/Scanner un code Conteneur</label>
 
-    <form>
-        <input id="codeConteneur" onblur="test()" type="text">
-        <button type="button" onclick="codeConteneurControl()">Valider</button>
-    </form>
+
+    <div class="row align-items-center justify-content-center">
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+        <h1 class="text-center">Déplacer un Conteneur</h1>
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+    </div>
+
+
+
+    <div class="container mt-4">
+        <div class="row align-items-center justify-content-center">
+
+                <div class="card-sl col-3 p-0">
+                    <div class="card-image border border-white">
+
+                        <img
+                                alt="no-image" src="{{ asset("img/mouvement-1.jpg") }}"/>
+
+                    </div>
+
+                    <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
+                    <div class="card-heading">
+                        Réceptionner un Conteneur
+                    </div>
+
+                    <div class="card-text p-0">
+
+                        <form class="row m-0 justify-content-center">
+                            <label  class="col-10 mt-3" for="codeConteneur"> Selection/Scanner un code Conteneur</label>
+                            <input class="col-10 mt-3" id="codeConteneur" onblur="test()" type="text">
+
+                        </form>
+                        <button class="card-button mt-3" type="button" onclick="codeConteneurControl()">Valider</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+
+
+
+
 
     <script>
         //Récupérer l'input

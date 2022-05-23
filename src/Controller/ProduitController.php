@@ -29,6 +29,25 @@ class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //Récupérer les données du formulaire
+            $file = $form['image']->getData();
+
+            //Définir le chemin vers le dossier de stockage situé dans public
+            $directory = './imgProduits/';
+
+            // Vérifier si le fichier existe
+            if ($file) {
+                // Récupérer l'extension
+                $extension = $file->guessExtension();
+
+                // Déplacer le fichier dans le dossier de stockage
+                $file->move($directory, 'Produit-' . $produit->getPartNumber() . '.' . $extension);
+
+                // Définir le chemin vers l'image associée à la ville qui sera enregistré dans la base de donnée
+                $produit->setImage($directory . 'Produit-' . $produit->getPartNumber() . '.' . $extension);
+            }
+
             $produitRepository->add($produit, true);
 
             return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
@@ -55,6 +74,26 @@ class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //Récupérer les données du formulaire
+            $file = $form['image']->getData();
+
+            //Définir le chemin vers le dossier de stockage situé dans public
+            $directory = './imgProduits/';
+
+            // Vérifier si le fichier existe
+            if ($file) {
+                // Récupérer l'extension
+                $extension = $file->guessExtension();
+
+                // Déplacer le fichier dans le dossier de stockage
+                $file->move($directory, 'Produit-' . $produit->getPartNumber() . '.' . $extension);
+
+                // Définir le chemin vers l'image associée à la ville qui sera enregistré dans la base de donnée
+                $produit->setImage($directory . 'Produit-' . $produit->getPartNumber() . '.' . $extension);
+            }
+
+
             $produitRepository->add($produit, true);
 
             return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
@@ -70,9 +109,11 @@ class ProduitController extends AbstractController
     public function delete(Request $request, Produit $produit, ProduitRepository $produitRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->request->get('_token'))) {
+            unlink($produit->getImage());
             $produitRepository->remove($produit, true);
         }
 
         return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }

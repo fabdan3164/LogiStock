@@ -1,23 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Commande a préparer{% endblock %}
+{% block title %}Commandes à préparer{% endblock %}
 
 {% block body %}
-    <h1>Commandes à préparer</h1>
-{% if commandes %}
-    <form name="commandeSelect">
-        <label> Selection une commande</label>
-        <select id="selectCommande">
-            {%for commande in commandes  %}
-            <option value="{{ commande.id }}" > {{ commande.numeroCommande }} </option>
-            {%endfor  %}
-        </select>
-    </form>
-        <button type="button" onclick="preparer()"> Lancer la préparation</button>
+    <div class="row align-items-center justify-content-center">
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+        <h1 class="text-center">Commandes à préparer</h1>
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+    </div>
 
-{% else %}
-<h2> Aucune commande a préparer </h2>
-{% endif %}
+
+
+    <div class="container mt-4">
+        <div class="row align-items-center justify-content-center">
+
+            <div class="card-sl col-3 p-0">
+                <div class="card-image border border-white">
+
+                    <img
+                            alt="no-image" src="{{ asset("img/commande.jpg") }}"/>
+
+                </div>
+
+                <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
+                <div class="card-heading">
+                    Sélectionner une commande
+                </div>
+
+                <div class="card-text p-0">
+                    {% if commandes %}
+                    <form name="commandeSelect" class="row m-0 justify-content-center">
+                        <label class=" text-center col-10 mt-3" > Selection une commande</label>
+                        <select class=" text-center col-10 mt-3" id="selectCommande">
+                            {%for commande in commandes  %}
+                                <option value="{{ commande.id }}" > {{ commande.numeroCommande }}
+                                    {% if commande.idStatut == "En Cours" %}
+                                    - Reprendre commande en cours
+                                    {% endif %}
+
+                                </option>
+                            {%endfor  %}
+                        </select>
+                    </form>
+                    <button class="card-button mt-3" type="button" onclick="preparer()"> Lancer la préparation</button>
+                    {% else %}
+
+                        <h5 class=" text-center col-12 p-4"> Aucune commande a préparer </h5>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
 <script>
 
  function preparer (){
