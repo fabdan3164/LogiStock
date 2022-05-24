@@ -3,49 +3,65 @@
 {% block title %}Produit index{% endblock %}
 
 {% block body %}
-    <h1>Produit index</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+            <h1 class="text-center">Produit</h1>
+            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-between">
+            <a class="col-2" href="{{ path('app_produit_new') }}">Créer un produit <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+            <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+        </div>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>PartNumber</th>
-                <th>Denomination</th>
-                <th>Fournisseur</th>
-                <th>Description</th>
-                <th>PrixUnitaire</th>
-                <th>StockMin</th>
-                <th>StockMax</th>
-                <th>actions</th>
-                <th>Commander</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for produit in produits %}
-            <tr>
-                <td>{{ produit.id }}</td>
-                <td>{{ produit.partNumber }}</td>
-                <td>{{ produit.denomination }}</td>
-                <td>{{ produit.fournisseur }}</td>
-                <td>{{ produit.description }}</td>
-                <td>{{ produit.prixUnitaire }}</td>
-                <td>{{ produit.stockMin }}</td>
-                <td>{{ produit.stockMax }}</td>
-                <td>
-                    <a href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
-                    <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
-                </td>
-                <td>
-                    <a href="{{ path('app_ligne_new', {'id': produit.id}) }}">Commander</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                <table class=" table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>PartNumber</th>
+                        <th>Denomination</th>
+                        <th>Fournisseur</th>
+                        <th>PrixUnitaire</th>
+                        <th>StockMin</th>
+                        <th>StockMax</th>
+                        <th>Actions</th>
 
-    <a href="{{ path('app_produit_new') }}">Create new</a>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for produit in produits %}
+
+                        <tr>
+                            <td>{{ produit.id }}</td>
+                            <td>{{ produit.partNumber }}</td>
+                            <td>{{ produit.denomination }}</td>
+                            <td>{{ produit.fournisseur }}</td>
+
+                            <td>{{ produit.prixUnitaire }}</td>
+                            <td>{{ produit.stockMin }}</td>
+                            <td>{{ produit.stockMax }}</td>
+                            <td>
+                                <a href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
+                                <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
+                            </td>
+
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+
+
+
+
+
+
+
 {% endblock %}

@@ -5,14 +5,17 @@ namespace App\Controller;
 use App\Entity\Reception;
 use App\Form\ReceptionType;
 use App\Repository\ReceptionRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[isGranted("ROLE_LOG")]
 #[Route('/reception')]
 class ReceptionController extends AbstractController
 {
+
     #[Route('/', name: 'app_reception_index', methods: ['GET'])]
     public function index(ReceptionRepository $receptionRepository): Response
     {
@@ -48,6 +51,7 @@ class ReceptionController extends AbstractController
         ]);
     }
 
+    //TO DO etudier suppresion
     #[Route('/{id}/edit', name: 'app_reception_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Reception $reception, ReceptionRepository $receptionRepository): Response
     {
@@ -66,6 +70,7 @@ class ReceptionController extends AbstractController
         ]);
     }
 
+    //TO DO etudier suppresion
     #[Route('/{id}', name: 'app_reception_delete', methods: ['POST'])]
     public function delete(Request $request, Reception $reception, ReceptionRepository $receptionRepository): Response
     {

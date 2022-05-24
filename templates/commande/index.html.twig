@@ -17,31 +17,31 @@
             <tr>
                 <th>Id</th>
                 <th>Numéro de Commande</th>
-                <th>Date de Commande</th>
                 <th>Statut</th>
-                <th>actions</th>
+                <th>Date de Commande</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for commande in commandes %}
+{% if  app.user %}
+            {% if is_granted('ROLE_ADMIN') or  app.user.id == commande.idUtilisateur.id  %}
             <tr>
                 <td>{{ commande.id }}</td>
                 <td>{{ commande.numeroCommande }}</td>
                 <td>{{ commande.idStatut }}</td>
                 <td>{{ commande.dateCommande ? commande.dateCommande|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_commande_show', {'id': commande.id}) }}">show</a>
-                    <a href="{{ path('app_commande_edit', {'id': commande.id}) }}">edit</a>
-                    <a href="{{ path('app_commande_print', {'id': commande.id}) }}">print</a>
+                    <a href="{{ path('app_commande_show', {'id': commande.id}) }}">Détail</a>
+
+                    <a href="{{ path('app_commande_print', {'id': commande.id}) }}">Impression</a>
                 </td>
             </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
+
+        {% endif %}
+{% endif %}
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_commande_new') }}">Create new</a>
 {% endblock %}

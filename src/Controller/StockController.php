@@ -5,14 +5,17 @@ namespace App\Controller;
 use App\Entity\Stock;
 use App\Form\StockType;
 use App\Repository\StockRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 #[Route('/stock')]
 class StockController extends AbstractController
 {
+    #[isGranted("ROLE_LOG")]
     #[Route('/', name: 'app_stock_index', methods: ['GET'])]
     public function index(StockRepository $stockRepository): Response
     {
@@ -21,6 +24,7 @@ class StockController extends AbstractController
         ]);
     }
 
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/new', name: 'app_stock_new', methods: ['GET', 'POST'])]
     public function new(Request $request, StockRepository $stockRepository): Response
     {
@@ -40,14 +44,9 @@ class StockController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_stock_show', methods: ['GET'])]
-    public function show(Stock $stock): Response
-    {
-        return $this->render('stock/show.html.twig', [
-            'stock' => $stock,
-        ]);
-    }
 
+
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/{id}/edit', name: 'app_stock_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Stock $stock, StockRepository $stockRepository): Response
     {
@@ -66,6 +65,7 @@ class StockController extends AbstractController
         ]);
     }
 
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: 'app_stock_delete', methods: ['POST'])]
     public function delete(Request $request, Stock $stock, StockRepository $stockRepository): Response
     {
@@ -76,6 +76,7 @@ class StockController extends AbstractController
         return $this->redirectToRoute('app_stock_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    #[isGranted("ROLE_LOG")]
     #[Route('/json/{adresse}', name: 'app_stock_json', methods: [ 'GET', 'POST'])]
     public function jsonAdresse(Request $request, StockRepository $stockRepository): Response
     {

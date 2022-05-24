@@ -4,17 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Commande;
 use App\Entity\Ligne;
-use App\Entity\Statut;
 use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
 use App\Repository\ConteneurRepository;
 use App\Repository\LigneRepository;
-use App\Repository\ProduitRepository;
 use App\Repository\StatutRepository;
 use DateTime;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Picqer\Barcode\BarcodeGeneratorPNG;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/commande')]
 class CommandeController extends AbstractController
 {
+    #[isGranted("ROLE_USER")]
     #[Route('/', name: 'app_commande_index', methods: ['GET'])]
     public function index(CommandeRepository $commandeRepository): Response
     {
@@ -31,6 +31,7 @@ class CommandeController extends AbstractController
         ]);
     }
 
+    #[isGranted("ROLE_LOG")]
     #[Route('/select', name: 'app_commande_select', methods: ['GET'])]
     public function selectCommande(CommandeRepository $commandeRepository): Response
     {
@@ -39,6 +40,7 @@ class CommandeController extends AbstractController
         ]);
     }
 
+    #[isGranted("ROLE_LOG")]
     #[Route('/select/{id}', name: 'app_commande_preparation', methods: ['GET'])]
     public function preparationCommande($id, CommandeRepository $commandeRepository, ConteneurRepository $conteneurRepository, LigneRepository $ligneRepository, StatutRepository $statutRepository): Response
 
@@ -93,7 +95,7 @@ class CommandeController extends AbstractController
         ]);
     }
 
-
+//TO DO etudier suppresion
     #[Route('/new', name: 'app_commande_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CommandeRepository $commandeRepository, StatutRepository $statutRepository): Response
     {
@@ -124,6 +126,7 @@ class CommandeController extends AbstractController
         ]);
     }
 
+//    //TO DO etudier suppresion
     #[Route('/{id}', name: 'app_commande_show', methods: ['GET'])]
     public function show(Commande $commande, LigneRepository $ligneRepository): Response
     {
@@ -135,6 +138,7 @@ class CommandeController extends AbstractController
         ]);
     }
 
+    #[isGranted("ROLE_USER")]
     #[Route('/{id}/valide', name: 'app_commande_valide', methods: ['GET'])]
     public function valide(Commande $commande, LigneRepository $ligneRepository, StatutRepository $statutRepository, CommandeRepository $commandeRepository): Response
     {
@@ -151,6 +155,7 @@ class CommandeController extends AbstractController
         return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    #[isGranted("ROLE_LOG")]
     #[Route('/{id}/prepare', name: 'app_commande_prepare', methods: ['GET'])]
     public function prepare(CommandeRepository $commandeRepository, StatutRepository $statutRepository, $id): Response
     {
@@ -168,6 +173,7 @@ class CommandeController extends AbstractController
 
     }
 
+//TO DO etudier suppresion
     #[Route('/{id}/edit', name: 'app_commande_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Commande $commande, CommandeRepository $commandeRepository): Response
     {
@@ -186,6 +192,7 @@ class CommandeController extends AbstractController
         ]);
     }
 
+//TO DO etudier suppresion
     #[Route('/{id}', name: 'app_commande_delete', methods: ['POST'])]
     public function delete(Request $request, Commande $commande, CommandeRepository $commandeRepository): Response
     {
@@ -196,7 +203,7 @@ class CommandeController extends AbstractController
         return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
     }
 
-
+    #[isGranted("ROLE_LOG")]
     #[Route('/{id}/pdf', name: 'app_commande_print', methods: ['GET'])]
     public function printPdf($id, CommandeRepository $commandeRepository, LigneRepository $ligneRepository): Response
     {
@@ -247,7 +254,6 @@ class CommandeController extends AbstractController
 
         unlink('barcode' . $commande . '.png');
     }
-
 
 }
 

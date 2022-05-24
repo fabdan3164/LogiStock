@@ -8,38 +8,66 @@
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+
+
+
+    <div class="container mt-4">
+        <div class="row align-items-center justify-content-center">
+
+            <div class="card-sl col-12 p-0 m-0">
+
+
+                <div class="card-heading">
+                    <div class="row align-items-center justify-content-center">
+                        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                        <h1 class="text-center">Connexion</h1>
+                        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                    </div>
+
+                    <a  href="{{ path('app_register') }}">Inscription  <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+                </div>
+
+                <div
+                        class="card-text p-0 row m-0 justify-content-center">
+                    <form>
+                        <label for="inputIdentifiant">Identifiant</label>
+
+                        <input type="text" value="{{ last_username }}" name="identifiant" id="inputIdentifiant"
+                               class="form-control col-4 " autocomplete="username" required autofocus>
+                        <label for="inputPassword">Password</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control col-4"
+                               autocomplete="current-password" required>
+
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('authenticate') }}"
+                        >
+
+                        {#
+                        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+                        See https://symfony.com/doc/current/security/remember_me.html
+
+                        <div class="checkbox mb-3">
+                            <label>
+                                <input type="checkbox" name="_remember_me"> Remember me
+                            </label>
+                        </div>
+                        #}
+
+                        <button class="card-button mt-3 border-0" type="submit">
+                            Connexion
+                        </button>
+                    </form>
+
+                    {% if app.user %}
+                        <div class="mb-3">
+                            Vous ëtes idenditfier en temps que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    {% endif %}
+    </div>
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputIdentifiant">Identifiant</label>
-    <input type="text" value="{{ last_username }}" name="identifiant" id="inputIdentifiant" class="form-control" autocomplete="username" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
 
-    {#
-        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-    #}
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
-
-    <a href="{{ path('app_register') }}">Inscription</a>
-
-{% endblock %}
+    {% endblock %}

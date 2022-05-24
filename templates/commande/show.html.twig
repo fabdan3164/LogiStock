@@ -9,7 +9,9 @@
         <thead>
         <tr>
             <th>Produit</th>
+
             <th>Modifier</th>
+
             <th>Statut</th>
             <th>Quantite</th>
             <th>Prix Unitaire</th>
@@ -20,7 +22,16 @@
         {% for ligne in lignes %}
             <tr>
                 <td>{{ ligne.idProduit }} - {{ ligne.idProduit.denomination }}</td>
-                <td> <a class="btn " href="{{ path('app_ligne_edit' , {'id': ligne.id}) }}">Modifier</a></td>
+
+                <td>
+                    {% if ligne.idCommande.idStatut == 'En attente de validation'%}
+                    <a class="btn " href="{{ path('app_ligne_edit' , {'id': ligne.id}) }}">Modifier</a>
+                        {% else %}
+                        Commande Validé
+                    {% endif  %}
+
+
+                </td>
                 <td>{{ ligne.idStatut }}</td>
                 <td>{{ ligne.quantite }}</td>
                 <td>{{ ligne.idProduit.prixUnitaire }}</td>
@@ -34,6 +45,8 @@
 
         <tfoot>
         <tr>
+            <td >
+            </td>
             <td >
             </td>
             <td >
@@ -62,6 +75,8 @@
             <td >
             </td>
             <td >
+            </td>
+            <td >
                 TAXE à  20%
             </td>
             <td>
@@ -74,6 +89,8 @@
             <td >
             </td>
             <td >
+            <td >
+            </td>
             </td>
             <td >
                 TOTAL TTC À PAYER

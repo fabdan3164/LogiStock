@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Repository\FluxRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[isGranted("ROLE_LOG")]
 #[Route('/flux')]
 class FluxController extends AbstractController
 {

@@ -5,26 +5,31 @@ namespace App\Controller;
 use App\Entity\Produit;
 use App\Form\ProduitType;
 use App\Repository\ProduitRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 #[Route('/produit')]
 class ProduitController extends AbstractController
 {
+    #[isGranted("ROLE_LOG")]
     #[Route('/', name: 'app_produit_index', methods: ['GET'])]
-    public function index(ProduitRepository $produitRepository): Response
+    public function index( ProduitRepository $produitRepository): Response
     {
         return $this->render('produit/index.html.twig', [
             'produits' => $produitRepository->findAll(),
         ]);
     }
 
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/new', name: 'app_produit_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ProduitRepository $produitRepository): Response
     {
         $produit = new Produit();
+        $produit->setPartNumber('PN'.hexdec(uniqid()));
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
 
@@ -59,6 +64,7 @@ class ProduitController extends AbstractController
         ]);
     }
 
+    #[isGranted("ROLE_LOG")]
     #[Route('/{id}', name: 'app_produit_show', methods: ['GET'])]
     public function show(Produit $produit): Response
     {
@@ -67,6 +73,7 @@ class ProduitController extends AbstractController
         ]);
     }
 
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/{id}/edit', name: 'app_produit_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Produit $produit, ProduitRepository $produitRepository): Response
     {
@@ -105,6 +112,7 @@ class ProduitController extends AbstractController
         ]);
     }
 
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: 'app_produit_delete', methods: ['POST'])]
     public function delete(Request $request, Produit $produit, ProduitRepository $produitRepository): Response
     {

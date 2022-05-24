@@ -13,12 +13,14 @@ use DateTime;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Picqer\Barcode\BarcodeGeneratorPNG;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\ByteString;
 
+#[isGranted("ROLE_LOG")]
 #[Route('/conteneur')]
 class ConteneurController extends AbstractController
 {
@@ -37,7 +39,6 @@ class ConteneurController extends AbstractController
         return $this->render('conteneur/select.html.twig', [
         ]);
     }
-
 
     #[Route('/new', name: 'app_conteneur_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ConteneurRepository $conteneurRepository, StockRepository $stockRepository, FluxRepository $fluxRepository): Response
@@ -106,7 +107,6 @@ class ConteneurController extends AbstractController
         ]);
     }
 
-
     #[Route('/select/{id}', name: 'app_conteneur_mouvement', methods: ['GET', 'POST'])]
     public function mouvement(Request $request, Conteneur $conteneur, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository): Response
     {
@@ -169,7 +169,6 @@ class ConteneurController extends AbstractController
         ]);
     }
 
-
     #[Route('/{id}', name: 'app_conteneur_delete', methods: ['POST'])]
     public function delete(Request $request, Conteneur $conteneur, ConteneurRepository $conteneurRepository): Response
     {
@@ -179,7 +178,6 @@ class ConteneurController extends AbstractController
 
         return $this->redirectToRoute('app_conteneur_index', [], Response::HTTP_SEE_OTHER);
     }
-
 
     #[Route('/{id}/pdf', name: 'app_conteneur_print', methods: ['GET'])]
     public function printPdf($id, ConteneurRepository $conteneurRepository): Response

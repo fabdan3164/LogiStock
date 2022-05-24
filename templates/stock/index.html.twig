@@ -3,27 +3,44 @@
 {% block title %}Stock index{% endblock %}
 
 {% block body %}
-    <h1>Stock index</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+            <h1 class="text-center">Adresse de stockage</h1>
+            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+        </div>
+    </div>
 
-    <table class="table">
+    <div class="container">
+        <div class="row justify-content-between">
+            <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+            <a class=" col-2 p-0" href="{{ path('app_stock_new') }}">Créer une adresse <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+        </div>
+    </div>
+
+    <table class="table mt-3">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>AdresseStock</th>
-                <th>MultiStockage</th>
-                <th>Code Conteneur</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>AdresseStock</th>
+            <th>MultiStockage</th>
+            <th>Occupé</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for stock in stocks %}
             <tr>
                 <td>{{ stock.id }}</td>
                 <td>{{ stock.adresseStock }}</td>
-                <td>{{ stock.getConteneurs }}</td>
                 <td>{{ stock.multiStockage ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('app_stock_show', {'id': stock.id}) }}">show</a>
+                        {% for conteneur in stock.getConteneurs() %}
+                            {{ conteneur.codeConteneur }} </br>
+                        {% endfor %}
+                </td>
+                <td>
+
                     <a href="{{ path('app_stock_edit', {'id': stock.id}) }}">edit</a>
                 </td>
             </tr>
@@ -35,5 +52,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_stock_new') }}">Create new</a>
+
 {% endblock %}

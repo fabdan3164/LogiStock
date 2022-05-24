@@ -65,6 +65,9 @@ a {
     color: #fff;
     border-radius: 0 0 8px 8px;
 }
+.border-none {
+    border: none;
+}
 
 .card-button-supprimer {
     display: flex;

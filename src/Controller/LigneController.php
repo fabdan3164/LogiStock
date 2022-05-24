@@ -13,6 +13,7 @@ use App\Repository\LigneRepository;
 use App\Repository\ProduitRepository;
 use App\Repository\StatutRepository;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,14 +22,16 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/ligne')]
 class LigneController extends AbstractController
 {
-    #[Route('/', name: 'app_ligne_index', methods: ['GET'])]
-    public function index(LigneRepository $ligneRepository): Response
-    {
-        return $this->render('ligne/index.html.twig', [
-            'lignes' => $ligneRepository->findAll(),
-        ]);
-    }
+    //TO DO etudier suppresion
+//    #[Route('/', name: 'app_ligne_index', methods: ['GET'])]
+//    public function index(LigneRepository $ligneRepository): Response
+//    {
+//        return $this->render('ligne/index.html.twig', [
+//            'lignes' => $ligneRepository->findAll(),
+//        ]);
+//    }
 
+    #[isGranted("ROLE_USER")]
     #[Route('/new/{id}', name: 'app_ligne_new', methods: ['GET', 'POST'])]
     public function new($id, Request $request, LigneRepository $ligneRepository, StatutRepository $statutRepository, CommandeRepository $commandeRepository, ProduitRepository $produitRepository, ConteneurRepository $conteneurRepository): Response
     {
@@ -107,14 +110,16 @@ class LigneController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_ligne_show', methods: ['GET'])]
-    public function show(Ligne $ligne): Response
-    {
-        return $this->render('ligne/show.html.twig', [
-            'ligne' => $ligne,
-        ]);
-    }
+    //TO DO etudier suppresion
+//    #[Route('/{id}', name: 'app_ligne_show', methods: ['GET'])]
+//    public function show(Ligne $ligne): Response
+//    {
+//        return $this->render('ligne/show.html.twig', [
+//            'ligne' => $ligne,
+//        ]);
+//    }
 
+    #[isGranted("ROLE_USER")]
     #[Route('/{id}/edit', name: 'app_ligne_edit', methods: ['GET', 'POST'])]
     public function edit($id, Request $request, Ligne $ligne, LigneRepository $ligneRepository, ConteneurRepository $conteneurRepository): Response
     {
@@ -159,6 +164,7 @@ class LigneController extends AbstractController
         ]);
     }
 
+    #[isGranted("ROLE_USER")]
     #[Route('/{id}', name: 'app_ligne_delete', methods: ['POST'])]
     public function delete(Request $request, Ligne $ligne, LigneRepository $ligneRepository): Response
     {
@@ -169,7 +175,7 @@ class LigneController extends AbstractController
         return $this->redirectToRoute('app_ligne_index', [], Response::HTTP_SEE_OTHER);
     }
 
-
+    #[isGranted("ROLE_USER")]
     #[Route('validationPreparation/{id}/{idConteneur}', name: 'app_ligne_statut', methods: ['GET'])]
     public function statut($idConteneur, Ligne $ligne, LigneRepository $ligneRepository, StatutRepository $statutRepository, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository,CommandeRepository $commandeRepository): Response
     {
