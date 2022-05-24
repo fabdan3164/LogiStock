@@ -53,7 +53,7 @@ class LigneController extends AbstractController
         $ligne->setIdProduit($produitRepository->find($id));
 
         //Défini la commande sur laquelle affecter la ligne
-        $commande = $commandeRepository->findBy(['idUtilisateur' => $user->getId(), 'idStatut' => '1']);
+        $commande = $commandeRepository->findBy(['idUtilisateur' => $user->getId(), 'idStatut' => '4']);
 
         //S'il n'y a pas de commande en créer une nouvelle
         if (!$commande) {

@@ -8,17 +8,30 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-
+                {% if is_granted('ROLE_LOG') %}
                 <li class="nav-item">
                     <a class="nav-link" href="">Clients</a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_stock_index') }}">Entrepot</a>
                 </li>
 
+                {% endif %}
+
+                {% if is_granted('ROLE_USER') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_commande_index') }}">Commandes</a>
                 </li>
+                {% endif %}
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register_log') }}">Inscription</a>
+                    </li>
+                {% endif %}
+
+                {% if is_granted('ROLE_LOG')  %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Stock
@@ -29,6 +42,7 @@
                         <li><a class="dropdown-item" href="{{ path('app_produit_index') }}">Liste des Produits</a></li>
                     </ul>
                 </li>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Operationnel
@@ -39,8 +53,13 @@
                         <li><a class="dropdown-item" href="{{ path('app_commande_select') }}">Préparer une commande</a></li>
                     </ul>
                 </li>
+                {% endif %}
                 <li class="nav-item">
+                    {% if app.user %}
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion {{ app.user.identifiant}} </a>
+                    {% else %}
                     <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    {% endif %}
                 </li>
             </ul>
         </div><!--/.nav-collapse -->

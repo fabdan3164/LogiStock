@@ -25,7 +25,7 @@
         <tbody>
         {% for commande in commandes %}
 {% if  app.user %}
-            {% if is_granted('ROLE_ADMIN') or  app.user.id == commande.idUtilisateur.id  %}
+            {% if is_granted('ROLE_LOG') or  app.user.id == commande.idUtilisateur.id  %}
             <tr>
                 <td>{{ commande.id }}</td>
                 <td>{{ commande.numeroCommande }}</td>

@@ -12,8 +12,12 @@
     </div>
     <div class="container">
         <div class="row justify-content-between">
-            <a class="col-2" href="{{ path('app_produit_new') }}">Créer un produit <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+
             <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="col-2" href="{{ path('app_produit_new') }}">Créer un produit <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+            {% endif %}
         </div>
     </div>
 
@@ -45,7 +49,10 @@
                             <td>{{ produit.stockMax }}</td>
                             <td>
                                 <a href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
+
+                                {% if is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
+                                {% endif %}
                             </td>
 
                         </tr>
