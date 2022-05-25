@@ -172,7 +172,7 @@ class LigneController extends AbstractController
             $ligneRepository->remove($ligne, true);
         }
 
-        return $this->redirectToRoute('app_ligne_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[isGranted("ROLE_USER")]

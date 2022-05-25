@@ -3,9 +3,45 @@
 {% block title %}New Reception{% endblock %}
 
 {% block body %}
-    <h1>Create new Reception</h1>
 
-    {{ include('reception/_form.html.twig') }}
+    <div class="container m-0 p-0">
 
-    <a href="{{ path('app_reception_index') }}">back to list</a>
+        <div class="card-sl">
+
+            <div class="card-heading ">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                        <h1 class="text-center">Enregistrer un bon de livraison</h1>
+                        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+
+                    </div>
+
+                </div>
+                <a  href="{{ path('app_reception_index') }}">Retour à la liste des bons de livraison <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+            </div>
+
+            {{ form_start(form, {'attr': {'class': 'row m-0 justify-content-center text-center mt-3'}}) }}
+
+            {{ form_label(form.bonDeCommande) }}
+            {{ form_widget(form.bonDeCommande, {'attr': {'class': 'col-6 mt-2 ' }} ) }}
+
+
+
+            <div class="col-12 m-3">
+                <button type="submit" class="card-button" style="width:20%; border-radius: 8px 8px; margin:1px auto;">
+                    Valider
+                </button>
+            </div>
+            {{ form_end(form) }}
+
+
+        </div>
+    </div>
+    </div>
+
+
+{#    {{ include('reception/_form.html.twig') }}#}
+
+
 {% endblock %}

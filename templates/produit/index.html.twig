@@ -48,10 +48,10 @@
                             <td>{{ produit.stockMin }}</td>
                             <td>{{ produit.stockMax }}</td>
                             <td>
-                                <a href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
+                                <a href="{{ path('app_produit_show', {'id': produit.id}) }}">Détail</a>
 
                                 {% if is_granted('ROLE_ADMIN') %}
-                                <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
+                                <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">Modifier</a>
                                 {% endif %}
                             </td>
 

@@ -19,6 +19,7 @@
                 <th>Numéro de Commande</th>
                 <th>Statut</th>
                 <th>Date de Commande</th>
+                <th>Client</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -31,6 +32,7 @@
                 <td>{{ commande.numeroCommande }}</td>
                 <td>{{ commande.idStatut }}</td>
                 <td>{{ commande.dateCommande ? commande.dateCommande|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ commande.idUtilisateur.identifiant }}</td>
                 <td>
                     <a href="{{ path('app_commande_show', {'id': commande.id}) }}">Détail</a>
 
