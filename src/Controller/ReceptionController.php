@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reception;
 use App\Form\ReceptionType;
+use App\Repository\ProduitRepository;
 use App\Repository\ReceptionRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,13 +26,17 @@ class ReceptionController extends AbstractController
     }
 
     #[Route('/new', name: 'app_reception_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ReceptionRepository $receptionRepository): Response
+    public function new(Request $request, ReceptionRepository $receptionRepository,ProduitRepository $produitRepository): Response
     {
         $reception = new Reception();
         $form = $this->createForm(ReceptionType::class, $reception);
+
         $form->handleRequest($request);
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
+
             $receptionRepository->add($reception, true);
 
             return $this->redirectToRoute('app_reception_index', [], Response::HTTP_SEE_OTHER);
@@ -43,13 +48,8 @@ class ReceptionController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_reception_show', methods: ['GET'])]
-    public function show(Reception $reception): Response
-    {
-        return $this->render('reception/show.html.twig', [
-            'reception' => $reception,
-        ]);
-    }
+
+
 
     //TO DO etudier suppresion
     #[Route('/{id}/edit', name: 'app_reception_edit', methods: ['GET', 'POST'])]

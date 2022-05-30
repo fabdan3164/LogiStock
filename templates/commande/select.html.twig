@@ -14,7 +14,7 @@
     <div class="container mt-4">
         <div class="row align-items-center justify-content-center">
 
-            <div class="card-sl col-3 p-0">
+            <div class="card-sl col-12 p-0">
                 <div class="card-image border border-white">
 
                     <img
@@ -23,7 +23,7 @@
                 </div>
 
                 <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
-                <div class="card-heading">
+                <div class="card-heading text-center">
                     Sélectionner une commande
                 </div>
 
@@ -31,7 +31,7 @@
                     {% if commandes %}
                     <form name="commandeSelect" class="row m-0 justify-content-center">
                         <label class=" text-center col-10 mt-3" > Selection une commande</label>
-                        <select class=" text-center col-10 mt-3" id="selectCommande">
+                        <select class=" text-center col-3 mt-3" id="selectCommande">
                             {%for commande in commandes  %}
                                 <option value="{{ commande.id }}" > {{ commande.numeroCommande }}
                                     {% if commande.idStatut == "En Cours" %}

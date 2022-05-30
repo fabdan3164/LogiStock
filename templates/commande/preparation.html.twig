@@ -20,43 +20,39 @@
         <img class="col-3" src="{{ asset('img/separator.svg') }}">
     </div>
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center container p-0">
 
         {% if lignes %}
 
+            <div class="row align-items-center justify-content-center mt-4">
+
+                <div class="card-sl col-12 p-0">
+                    <div class="card-image border border-white">
+
+                        <img
+                                alt="no-image" src="{{ asset("img/commande.jpg") }}"/>
+
+                    </div>
+
+                    <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
+                    <div class="card-heading text-center">
+                        {{ lignes[0].idProduit.denomination }} {{ lignes[0].idProduit.PartNumber }}
+                    </div>
+
+                    <div class="card-text p-0 text-center">
+                        Rendez vous à l'adresse {{ lignes[0].conteneur[0].idStock }}. <br>
+                        Prélever {{ lignes[0].quantite }} {{ lignes[0].idProduit.denomination }} dans le
+                        conteneur <br>{{ lignes[0].conteneur[0].codeConteneur }} part
+                        number {{ lignes[0].idProduit.PartNumber }}
+
+                        <a class="card-button mt-3"
+                           href="{{ path('app_ligne_statut', {'id': lignes[0].id, 'idConteneur': lignes[0].conteneur[0].id} ) }}">Valider</a>
 
 
-            <div class="container mt-4">
-                <div class="row align-items-center justify-content-center">
-
-                    <div class="card-sl col-3 p-0">
-                        <div class="card-image border border-white">
-
-                            <img
-                                    alt="no-image" src="{{ asset("img/commande.jpg") }}"/>
-
-                        </div>
-
-                        <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
-                        <div class="card-heading">
-                            {{ lignes[0].idProduit.denomination }} {{ lignes[0].idProduit.PartNumber }}
-                        </div>
-
-                        <div class="card-text p-0 text-center">
-                            Rendez vous à l'adresse {{ lignes[0].conteneur[0].idStock }}. <br>
-                            Prélever {{ lignes[0].quantite }} {{ lignes[0].idProduit.denomination }} dans le
-                            conteneur <br>{{ lignes[0].conteneur[0].codeConteneur }} part
-                            number {{ lignes[0].idProduit.PartNumber }}
-
-                            <a class="card-button mt-3"
-                               href="{{ path('app_ligne_statut', {'id': lignes[0].id, 'idConteneur': lignes[0].conteneur[0].id} ) }}">Valider</a>
-
-
-
-                        </div>
                     </div>
                 </div>
             </div>
+
 
 
 
@@ -84,8 +80,10 @@
 
                         <div class="card-text p-0 text-center">
 
-                            <a class="card-button-bis" href="{{ path('app_commande_prepare' , {'id': commande.id}) }}">Sélectionner une autre commande</a>
-                            <a class="card-button" href="{{ path('app_commande_print', {'id': commande.id})  }}">Imprimer le bon de commande</a>
+                            <a class="card-button-bis" href="{{ path('app_commande_prepare' , {'id': commande.id}) }}">Sélectionner
+                                une autre commande</a>
+                            <a class="card-button" href="{{ path('app_commande_print', {'id': commande.id}) }}">Imprimer
+                                le bon de commande</a>
 
                         </div>
                     </div>

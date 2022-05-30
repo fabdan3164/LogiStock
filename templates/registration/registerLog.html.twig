@@ -21,18 +21,38 @@
 
                 <div class="card-text p-0 ">
 
-                    {{ form_start(registrationForm, {'attr': {'class': 'row m-0 justify-content-center'}})  }}
-                    {{ form_row(registrationForm.identifiant , { 'attr': {'class': 'col-12 mt-2 text-center '}}) }}
-                    {{ form_row(registrationForm.plainPassword, {
-                        label: 'Password','attr': {'class': 'col-12 mt-2 text-center '}
-                    }) }}
-                    {{ form_row(registrationForm.nom, {'attr': {'class': 'col-12 mt-2 text-center '}}) }}
-                    {{ form_row(registrationForm.prenom, {'attr': {'class': 'col-12 mt-2 text-center '}}) }}
-                    {{ form_row(registrationForm.telephone, {'attr': {'class': 'col-12 mt-2 text-center '}}) }}
-                    {{ form_row(registrationForm.email, {'attr': {'class': 'col-12 mt-2 text-center '}}) }}
-                    {{ form_row(registrationForm.adresse, {'attr': {'class': 'col-12 mt-2 text-center '}}) }}
-                    {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'col-2 mt-2 text-center '}}) }}
-                    <button class="card-button mt-3 border-0" type="submit" >Valider</button>
+                    {{ form_start(registrationForm, {'attr': {'class': 'row m-0 justify-content-center text-end'}}) }}
+                    <div class="col-6 mt-3">
+                        {{ form_row(registrationForm.identifiant , { 'attr': {'class': 'ms-4 '}}) }}
+                    </div>
+                    <div class="col-6 mt-3">
+                        {{ form_row(registrationForm.plainPassword, {
+                            label: 'Password','attr': {'class': 'ms-4  '}
+                        }) }}
+                    </div>
+                    <div class="col-6 mt-3">
+                        {{ form_row(registrationForm.nom, {'attr': {'class': 'ms-4  '}}) }}
+                    </div>
+
+                    <div class="col-6 mt-3">
+                        {{ form_row(registrationForm.prenom, {'attr': {'class': 'ms-4  '}}) }}
+                    </div>
+                    <div class="col-6 mt-3">
+                        {{ form_row(registrationForm.telephone, {'attr': {'class': 'ms-4  '}}) }}
+                    </div>
+
+                    <div class="col-6 mt-3">
+                        {{ form_row(registrationForm.email, {'attr': {'class': 'ms-4  '}}) }}
+                    </div>
+
+                    <div class="col-6 mt-3">
+                        {{ form_row(registrationForm.adresse, {'attr': {'class': 'ms-4  '}}) }}
+                    </div>
+                    <div class="col-6 mt-3">
+                        {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'ms-4  '}}) }}
+                    </div>
+
+                    <button class="card-button mt-3 border-0" type="submit">Valider</button>
                     {{ form_end(registrationForm) }}
                 </div>
             </div>

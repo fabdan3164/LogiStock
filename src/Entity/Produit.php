@@ -45,6 +45,8 @@ class Produit
     #[ORM\Column(type: 'text', nullable: true)]
     private $image;
 
+
+
     public function __construct()
     {
         $this->conteneurs = new ArrayCollection();
@@ -215,4 +217,5 @@ class Produit
 
         return $this;
     }
+
 }

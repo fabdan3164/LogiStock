@@ -1,4 +1,13 @@
 .light-table-filter {
-  border: dashed 1px rgb(225,113,65);
+  border: none;
+  background-color: rgba(77, 131, 135, 0.27);
+  border-radius: 30px;
+text-align: center;
+}
+
+.light-table-filter:focus {
+  outline: none;
   background-color: transparent;
+  border: 3px solid rgba(77, 131, 135);
+  border-radius: 30px;
 }

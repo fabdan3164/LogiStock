@@ -43,6 +43,7 @@ class Reception
         return $this;
     }
 
+
     /**
      * @return Collection<int, Conteneur>
      */
@@ -69,11 +70,16 @@ class Reception
                 $conteneur->setIdReception(null);
             }
         }
-
         return $this;
     }
+
     public function __toString(): string
     {
         return $this->bonDeCommande;
     }
+
+
+
+
+
 }

@@ -3,18 +3,19 @@
 {% block title %}Commandes{% endblock %}
 
 {% block body %}
-<div class="row align-items-center justify-content-center">
+<div class="row align-items-center justify-content-center mt-3">
     <img class="col-3" src="{{ asset('img/separator.svg') }}">
     <h1 class="text-center" >Commandes</h1>
     <img class="col-3" src="{{ asset('img/separator.svg') }}">
 </div>
-
-    <div  class="row justify-content-end">
+<div class="container">
+    <div  class="row justify-content-end mb-3">
         <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
     </div>
+</div>
     <table class="table">
-        <thead>
-            <tr>
+        <thead >
+            <tr >
                 <th>Id</th>
                 <th>Numéro de Commande</th>
                 <th>Statut</th>

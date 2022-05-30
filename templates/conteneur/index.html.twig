@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <div class="container">
+    <div class="container mt-3">
         <div class="row justify-content-center">
             <img class="col-3" src="{{ asset('img/separator.svg') }}">
             <h1 class="text-center">État des stocks</h1>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="container">
-        <div  class="row justify-content-end ">
+        <div  class="row justify-content-end mb-3">
             <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
         </div>
     </div>
@@ -24,6 +24,7 @@
                 <th>Adresse</th>
                 <th>CodeConteneur</th>
                 <th>Quantité</th>
+                <th>Produit</th>
                 <th>DateReception</th>
                 <th>actions</th>
             </tr>
@@ -34,6 +35,7 @@
                 <td>{{ conteneur.idStock }}</td>
                 <td>{{ conteneur.codeConteneur }}</td>
                 <td>{{ conteneur.quantite }}</td>
+                <td>{{ conteneur.IdProduit }}</td>
                 <td>{{ conteneur.dateReception ? conteneur.dateReception|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_flux_show' , {'codeConteneur': conteneur.codeConteneur}) }}">Détail</a>

@@ -15,27 +15,27 @@
         <div class="row align-items-center justify-content-center">
 
 
-            <div class="col-3">
+            <div class="col-12 p-0">
                 <div class="card-sl">
                     <div class="card-image border border-white">
 
                         <img
-                                alt="no-image" src="{{ asset("img/reception.jpg") }}"/>
+                                alt="reception" src="{{ asset("img/reception.jpg") }}"/>
 
                     </div>
 
                     <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
-                    <div class="card-heading">
+                    <div class="card-heading text-center">
                         Réceptionner un Conteneur
                     </div>
 
                     {{ form_start(form, {'attr': {'class': 'row m-0 justify-content-center'}}) }}
                     <span class="text-center mt-2">Saisir la quantité à réceptionner</span>
-                    {{ form_widget(form.quantite, {'attr': {'class': 'col-10 mt-2 text-center '}}) }}
+                    {{ form_widget(form.quantite, {'attr': {'class': 'col-4 mt-2 text-center '}}) }}
                     <span class="text-center mt-2"> Sélectionner le Bon De Livraison</span>
-                    {{ form_widget(form.idReception, {'attr': {'class': 'col-10 mt-2 text-center '}}) }}
+                    {{ form_widget(form.idReception, {'attr': {'class': 'col-4 mt-2 text-center '}}) }}
                      <span class="text-center mt-2">Sélectionner le Part Number à réceptionner</span>
-                    {{ form_widget(form.idProduit, {'attr': {'class': 'col-10 mt-2 text-center '}}) }}
+                    {{ form_widget(form.idProduit, {'attr': {'class': 'col-4 mt-2 text-center '}}) }}
                     <button type="submit" class="card-button mt-3">Réceptionner</button>
                     {{ form_end(form) }}
 

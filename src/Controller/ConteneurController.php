@@ -118,7 +118,6 @@ class ConteneurController extends AbstractController
         // Si l'emplacement de destination est deja occupé bloquer et ajouter un add flash
         if ($form->isSubmitted() && $conteneurRepository->findOneby(['idStock' => $form['idStock']->getData()]) && !$form['idStock']->getData()->isMultiStockage()) {
 
-
             //Reinitialise l'adresse de stockage pour affichage
             $conteneur->setIdStock($adresse);
 
@@ -159,7 +158,7 @@ class ConteneurController extends AbstractController
             $fluxRepository->add($flux1, true);
             $fluxRepository->add($flux2, true);
 
-            return $this->redirectToRoute('app_conteneur_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_conteneur_select', [], Response::HTTP_SEE_OTHER);
 
         }
 

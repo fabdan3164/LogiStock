@@ -22,14 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/ligne')]
 class LigneController extends AbstractController
 {
-    //TO DO etudier suppresion
-//    #[Route('/', name: 'app_ligne_index', methods: ['GET'])]
-//    public function index(LigneRepository $ligneRepository): Response
-//    {
-//        return $this->render('ligne/index.html.twig', [
-//            'lignes' => $ligneRepository->findAll(),
-//        ]);
-//    }
+
 
     #[isGranted("ROLE_USER")]
     #[Route('/new/{id}', name: 'app_ligne_new', methods: ['GET', 'POST'])]
@@ -98,6 +91,8 @@ class LigneController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $ligne->setQuantite($form['quantite']->getData());
+
+            
             $ligneRepository->add($ligne, true);
 
             return $this->redirectToRoute('app_main', [], Response::HTTP_SEE_OTHER);

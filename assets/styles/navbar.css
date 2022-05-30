@@ -1,5 +1,7 @@
 .navbar {
     background-color: rgba(0, 0, 0, 0.45);
+    position: sticky;
+    top: 1vh;
 }
 
 .navbar-brand {
