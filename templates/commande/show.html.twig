@@ -3,20 +3,18 @@
 {% block title %}Commande{% endblock %}
 
 {% block body %}
-<div class="row align-items-center justify-content-center">
-    <img class="col-3" src="{{ asset('img/separator.svg') }}">
-    <h1 class="text-center" >Panier</h1>
-    <img class="col-3" src="{{ asset('img/separator.svg') }}">
-</div>
+    <div class="row align-items-center justify-content-center mt-5 mb-5">
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+        <h1 class="text-center">Panier</h1>
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+    </div>
     <table class="table">
         <thead>
         <tr>
             <th>Produit</th>
-
             <th>Modifier</th>
-
             <th>Statut</th>
-            <th>Quantite</th>
+            <th>Quantité</th>
             <th>Prix Unitaire</th>
             <th>Total</th>
         </tr>
@@ -27,13 +25,11 @@
                 <td>{{ ligne.idProduit }} - {{ ligne.idProduit.denomination }}</td>
 
                 <td>
-                    {% if ligne.idCommande.idStatut == 'En attente de validation'%}
-                    <a class="btn " href="{{ path('app_ligne_edit' , {'id': ligne.id}) }}">Modifier</a>
-                        {% else %}
+                    {% if ligne.idCommande.idStatut == 'En attente de validation' %}
+                        <a class="btn " href="{{ path('app_ligne_edit' , {'id': ligne.id}) }}">Modifier</a>
+                    {% else %}
                         Commande Validé
-                    {% endif  %}
-
-
+                    {% endif %}
                 </td>
                 <td>{{ ligne.idStatut }}</td>
                 <td>{{ ligne.quantite }}</td>
@@ -46,24 +42,19 @@
             </tr>
         {% endfor %}
 
-        <tfoot>
         <tr>
-            <td >
-            </td>
-            <td >
-            </td>
-            <td >
-            </td>
-            <td >
-            </td>
-            <td >
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
                 TOTAL HT
             </td>
-            <td >
+            <td>
                 {% set sum = 0 %}
                 {% for ligne in lignes %}
 
-                    {%  set sum = sum + (ligne.quantite * ligne.idproduit.prixUnitaire)  %}
+                    {% set sum = sum + (ligne.quantite * ligne.idproduit.prixUnitaire) %}
 
                 {% endfor %}
                 {{ sum }} €
@@ -71,48 +62,35 @@
             </td>
         </tr>
         <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td>
-            </td>
-            <td >
-            </td>
-            <td >
-            </td>
-            <td >
-            </td>
-            <td >
-                TAXE à  20%
+                TAXE à 20%
             </td>
             <td>
-                {{ sum *0.2}} €
+                {{ sum *0.2 }} €
             </td>
         </tr>
         <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td>
-            </td>
-            <td >
-            </td>
-            <td >
-            <td >
-            </td>
-            </td>
-            <td >
                 TOTAL TTC À PAYER
             </td>
             <td>
-                 {{ sum *1.2}} €
+                {{ sum *1.2 }} €
             </td>
         </tr>
-        </tfoot>
         </tbody>
     </table>
 
-
-
-{% if commande.idStatut.id == 4 %}
-    <a class="btn btn-success m-3" href="{{ path('app_commande_valide' , {'id': commande.id}) }}">Valider</a>
-
-    {{ include('commande/_delete_form.html.twig') }}
+    {% if commande.idStatut.id == 4 %}
+        <a class="btn btn-success m-3" href="{{ path('app_commande_valide' , {'id': commande.id}) }}">Valider</a>
+        {{ include('commande/_delete_form.html.twig') }}
     {% endif %}
-
 
 {% endblock %}

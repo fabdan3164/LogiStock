@@ -21,35 +21,50 @@
 
                 <div class="card-text p-0 ">
 
-                    {{ form_start(registrationForm, {'attr': {'class': 'row m-0 justify-content-center text-end'}}) }}
-                    <div class="col-6 mt-3">
-                        {{ form_row(registrationForm.identifiant , { 'attr': {'class': 'ms-4 '}}) }}
+                    {{ form_start(registrationForm, {'attr': {'class': 'row m-0 justify-content-center'}}) }}
+
+
+                    <div class=" row justify-content-between col-7 ">
+                        {{ form_label(registrationForm.identifiant, 'Identifiant', { 'label_attr': {'class': 'col-4'}} ) }}
+                        {{ form_widget(registrationForm.identifiant, {
+                            'attr': {'class': '  col-8'}}) }}
                     </div>
-                    <div class="col-6 mt-3">
-                        {{ form_row(registrationForm.plainPassword, {
-                            label: 'Password','attr': {'class': 'ms-4  '}
+
+                    <div class="row justify-content-between col-7 mt-4">
+                        {{ form_label(registrationForm.plainPassword , 'Mot de passe', { 'label_attr': {'class': 'col-4'}}) }}
+                        {{ form_widget(registrationForm.plainPassword, {
+                            'attr': {'class': 'col-8'}
                         }) }}
                     </div>
-                    <div class="col-6 mt-3">
-                        {{ form_row(registrationForm.nom, {'attr': {'class': 'ms-4  '}}) }}
+
+                    <div class="row justify-content-between col-7 mt-4">
+                        {{ form_label(registrationForm.nom , 'Nom', { 'label_attr': {'class': 'col-4'}}) }}
+                        {{ form_widget(registrationForm.nom, {'attr': {'class': 'col-8'}}) }}
                     </div>
 
-                    <div class="col-6 mt-3">
-                        {{ form_row(registrationForm.prenom, {'attr': {'class': 'ms-4  '}}) }}
-                    </div>
-                    <div class="col-6 mt-3">
-                        {{ form_row(registrationForm.telephone, {'attr': {'class': 'ms-4  '}}) }}
+                    <div class="row justify-content-between col-7 mt-4">
+                        {{ form_label(registrationForm.prenom , 'Prénom', { 'label_attr': {'class': 'col-4'}}) }}
+                        {{ form_widget(registrationForm.prenom, {'attr': {'class': 'col-8'}}) }}
                     </div>
 
-                    <div class="col-6 mt-3">
-                        {{ form_row(registrationForm.email, {'attr': {'class': 'ms-4  '}}) }}
+                    <div class="row justify-content-between col-7 mt-4">
+                        {{ form_label(registrationForm.telephone, 'Téléphone', { 'label_attr': {'class': 'col-4'}}) }}
+                        {{ form_widget(registrationForm.telephone, {'attr': {'class': 'col-8'}}) }}
                     </div>
 
-                    <div class="col-6 mt-3">
-                        {{ form_row(registrationForm.adresse, {'attr': {'class': 'ms-4  '}}) }}
+                    <div class="row justify-content-between col-7 mt-4">
+                        {{ form_label(registrationForm.email, 'Email', { 'label_attr': {'class': 'col-4'}}) }}
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'col-8'}}) }}
                     </div>
-                    <div class="col-6 mt-3">
-                        {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'ms-4  '}}) }}
+
+                    <div class="row justify-content-between col-7 mt-4">
+                        {{ form_label(registrationForm.adresse , 'Adresse', { 'label_attr': {'class': 'col-4'}}) }}
+                        {{ form_widget(registrationForm.adresse, {'attr': {'class': 'col-8'}}) }}
+                    </div>
+
+                    <div class="row justify-content-between col-7 mt-4">
+                        {{ form_label(registrationForm.agreeTerms, 'Charte d\'utilisation', { 'label_attr': {'class': 'col-4'}}) }}
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'col-8'}}) }}
                     </div>
 
                     <button class="card-button mt-3 border-0" type="submit">Valider</button>

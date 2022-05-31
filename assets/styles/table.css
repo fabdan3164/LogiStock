@@ -5,7 +5,11 @@
 
 }
 
-.table tbody tr {
+tfoot {
+    background-color: red;
+}
+
+.table tbody tr  {
     border-left: 10px solid rgba(77, 131, 135, 1);
 }
 
