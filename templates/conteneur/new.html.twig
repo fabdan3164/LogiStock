@@ -4,11 +4,7 @@
 
 {% block body %}
 
-    <div class="row align-items-center justify-content-center">
-        <img class="col-3" src="{{ asset('img/separator.svg') }}">
-        <h1 class="text-center">Réception</h1>
-        <img class="col-3" src="{{ asset('img/separator.svg') }}">
-    </div>
+
 
 
     <div class="container mt-4">
@@ -17,26 +13,31 @@
 
             <div class="col-12 p-0">
                 <div class="card-sl">
-                    <div class="card-image border border-white">
 
-                        <img
-                                alt="reception" src="{{ asset("img/palan.png") }}"/>
 
-                    </div>
-
-                    <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
                     <div class="card-heading text-center">
-                        Réceptionner un Conteneur
+
+                        <div class="row align-items-center justify-content-center">
+                            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                            <h1 class="text-center">Réception</h1>
+                            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+
+                        </div>
+
                     </div>
 
                     {{ form_start(form, {'attr': {'class': 'row m-0 justify-content-center'}}) }}
-                    <span class="text-center mt-2">Saisir la quantité à réceptionner</span>
-                    {{ form_widget(form.quantite, {'attr': {'class': 'col-4 mt-2 text-center '}}) }}
-                    <span class="text-center mt-2"> Sélectionner le Bon De Livraison</span>
-                    {{ form_widget(form.idReception, {'attr': {'class': 'col-4 mt-2 text-center '}}) }}
-                     <span class="text-center mt-2">Sélectionner le Part Number à réceptionner</span>
-                    {{ form_widget(form.idProduit, {'attr': {'class': 'col-4 mt-2 text-center '}}) }}
-                    <button type="submit" class="card-button mt-3">Réceptionner</button>
+                    <span class="text-center mt-5">Saisir la quantité à réceptionner</span>
+                    {{ form_widget(form.quantite, {'attr': {'class': 'col-4 mt-2 text-center  '}}) }}
+                    <span class="text-center mt-5"> Sélectionner le Bon De Livraison</span>
+                    {{ form_widget(form.idReception, {'attr': {'class': 'col-4 mt-2 text-center  '}}) }}
+                     <span class="text-center mt-5">Sélectionner le Part Number à réceptionner</span>
+                    {{ form_widget(form.idProduit, {'attr': {'class': 'col-4 mt-2 text-center  '}}) }}
+                    <div class="col-12 m-5">
+                        <button type="submit" class="card-button" style="width:20%; border-radius: 8px 8px; margin:1px auto;">
+                            Valider
+                        </button>
+                    </div>
                     {{ form_end(form) }}
 
 

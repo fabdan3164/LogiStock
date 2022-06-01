@@ -1,0 +1,15 @@
+.alerteStock  {
+    animation-duration: 2s;
+    animation-name: clignoter;
+    animation-iteration-count: infinite;
+    transition: none;
+
+}
+
+@keyframes clignoter {
+    0%   { background: radial-gradient(  rgba(226, 109, 92, 0.27),transparent, transparent); }
+    30%   {background: transparent  }
+    50%   {background: transparent  }
+    70%   {background: transparent  }
+    100% { background: radial-gradient(  rgba(226, 109, 92, 0.27), transparent, transparent); }
+}

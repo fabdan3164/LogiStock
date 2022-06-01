@@ -11,34 +11,35 @@
     <img class="col-3" src="{{ asset('img/separator.svg') }}">
 </div>
     </div>
-
-    <div class="container">
-        <div class="row justify-content-end mb-3">
+    <div class="container mb-3">
+        <div class="row justify-content-between">
             <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+            <a class="text-center col-1 p-0" href="{{ path('app_main') }}">Retour<i
+                        class="fa-solid fa-arrow-right-to-bracket"></i></a>
         </div>
     </div>
-<table class="table table-striped border-white">
+<table class="table table-striped border-white ">
     <thead>
     <tr>
-        <th>Code Conteneur</th>
-        <th>Type</th>
-        <th>Quantité</th>
-        <th>Part Number</th>
-        <th>Adresse</th>
-        <th>Document</th>
-        <th>Date</th>
+        <th class="col-2">Code Conteneur</th>
+        <th class="col-2">Type</th>
+        <th class="col-1">Quantité</th>
+        <th class="col-2">Part Number</th>
+        <th class="col-1">Adresse</th>
+        <th class="col-2">Document</th>
+        <th class="col-2">Date</th>
     </tr>
     </thead>
     <tbody>
     {% for mouvement in flux %}
         <tr>
-            <td><a href="{{ path('app_flux_show' , {'codeConteneur': mouvement.codeConteneur}) }}">{{ mouvement.codeConteneur}}</a></td>
-            <td>{{ mouvement.type }}</td>
-            <td>{{ mouvement.quantite }}</td>
-            <td>{{ mouvement.partNumber }}</td>
-            <td>{{ mouvement.adresseStock}}</td>
-            <td>{{ mouvement.origine}}</td>
-            <td>{{ mouvement.dateFlux | date('Y-m-d H:i:s')}}</td>
+            <td class="col-2"><a href="{{ path('app_flux_show' , {'codeConteneur': mouvement.codeConteneur}) }}">{{ mouvement.codeConteneur}}</a></td>
+            <td class="col-2">{{ mouvement.type }}</td>
+            <td class="col-1">{{ mouvement.quantite }}</td>
+            <td class="col-2">{{ mouvement.partNumber }}</td>
+            <td class="col-1">{{ mouvement.adresseStock}}</td>
+            <td class="col-2">{{ mouvement.origine}}</td>
+            <td class="col-2">{{ mouvement.dateFlux | date('Y-m-d H:i:s')}}</td>
 
         </tr>
     {% else %}
@@ -47,6 +48,6 @@
         </tr>
     {% endfor %}
     </tbody>
-
+</table>
 
 {% endblock %}

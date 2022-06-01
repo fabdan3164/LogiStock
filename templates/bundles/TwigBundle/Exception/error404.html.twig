@@ -2,10 +2,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Page not found</h1>
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+            <h1 >Page inexistante</h1>
+            <img class="col-3" src="{{ asset('img/separator.svg') }}">
 
-    <p>
-        The requested page couldn't be located. Checkout for any URL
-        misspelling or
-    </p>
+            <h2>
+                <a href="{{ path('app_main') }}">Retour à l'accueil </a>
+            </h2>
+
+        </div>
+    </div>
 {% endblock %}

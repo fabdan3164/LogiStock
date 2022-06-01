@@ -3,11 +3,57 @@
 {% block title %}Edit Stock{% endblock %}
 
 {% block body %}
-    <h1>Edit Stock</h1>
+    <div class="container mt-5">
+        <div class="row align-items-center justify-content-center" >
 
-    {{ include('stock/_form.html.twig', {'button_label': 'Update'}) }}
+            <div class="card-sl col-12 p-0 m-0">
 
-    <a href="{{ path('app_stock_index') }}">back to list</a>
+                <div class="card-heading"  >
+                    <div class="row align-items-center justify-content-center">
+                        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                        <h1 class="text-center">Modifier l'adresse de Stockage</h1>
+                        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                    </div>
+                    <div class=" row justify-content-end">
+                        <a class="col-1" href="{{ path('app_stock_index') }}">Retour <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+                    </div>
+                </div>
 
-    {{ include('stock/_delete_form.html.twig') }}
+                <div class=" p-0 " >
+
+                    {{ form_start(form , {'attr': {'class': 'row m-0 justify-content-center'}})  }}
+
+                    <div class=" row justify-content-center col-7 mt-5">
+                        {{ form_label(form.adresseStock, 'Adresse de Stockage', { 'label_attr': {'class': 'col-12 text-center'}} ) }}
+                        {{ form_widget(form.adresseStock, {
+                            'attr': {'class': ' text-center col-5'}}) }}
+                    </div>
+
+                    <div class=" row justify-content-center col-7 mt-5">
+                        {{ form_label(form.multiStockage, 'Multi-Stockage', { 'label_attr': {'class': 'col-12 text-center'}} ) }}
+                        {{ form_widget(form.multiStockage, {
+                            'attr': {'class': '  col-5'}}) }}
+                    </div>
+
+                    <div class="col-12 mt-5 ">
+                        <button type="submit" class="card-button" style="width:20%; border-radius: 8px 8px; margin:1px auto;">
+                            Valider
+                        </button>
+                    </div>
+                    {{ form_end(form) }}
+
+                    <form method="post"  style="width:20%;  margin:1px auto; " action="{{ path('app_stock_delete', {'id': stock.id}) }}"
+                          onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette adresse');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ stock.id) }}">
+                        <button class="card-button-supprimer mb-5 mt-3" style="border-radius: 8px 8px ;">Supprimer</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
 {% endblock %}

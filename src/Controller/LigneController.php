@@ -188,7 +188,7 @@ class LigneController extends AbstractController
         $flux->setQuantite($quantite * -1);
         $flux->setDateFlux(new DateTime());
         $flux->setOrigine($ligne->getIdCommande()->getNumeroCommande());
-        $flux->setType('PRÉPARATION - COMMANDE');
+        $flux->setType('PRÉPARATION');
         $flux->setPartNumber($conteneur->getIdProduit());
         $flux->setCodeConteneur($conteneur->getCodeConteneur());
         $flux->setAdresseStock($conteneur->getIdStock());

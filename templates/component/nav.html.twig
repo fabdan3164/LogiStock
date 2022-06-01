@@ -31,11 +31,11 @@
 
                 {% if is_granted('ROLE_LOG') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="">Clients</a>
+                        <a class="nav-link" href="{{ path('app_utilisateur') }}">Clients</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_stock_index') }}">Entrepot</a>
+                        <a class="nav-link" href="{{ path('app_stock_index') }}">Entrepôt</a>
                     </li>
 
                     <li class="nav-item dropdown">

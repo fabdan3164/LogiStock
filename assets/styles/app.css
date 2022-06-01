@@ -3,6 +3,7 @@
 
 @import "search.css";
 @import "table.css";
+@import "stockAlert.css";
 
 a {
     color: rgba(77, 131, 135, 1);

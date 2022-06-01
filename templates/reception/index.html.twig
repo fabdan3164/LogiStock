@@ -17,7 +17,7 @@
             <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
 
             {% if is_granted('ROLE_ADMIN') %}
-                <a class="col-2" href="{{ path('app_reception_new') }}">Enregistrer un bon de livraison <i
+                <a class="text-center col-2 p-0" href="{{ path('app_reception_new') }}">Enregistrer un bon de livraison <i
                             class="fa-solid fa-arrow-right-to-bracket"></i></a>
             {% endif %}
         </div>
@@ -38,11 +38,11 @@
             <tr>
                 <td>{{ reception.id }}</td>
                 <td>{{ reception.bonDeCommande }}</td>
-                <td class="text-end">  <a class="col-1" href="{{ path('app_reception_edit', {'id': reception.id}) }}">Modifier</a></td>
+                <td class="text-end">  <a class="col-1" href="{{ path('app_reception_edit', {'id': reception.id}) }}">Modifier</a> - </td>
                 <td>
                     <form class="col-1"  method="post" action="{{ path('app_reception_delete', {'id': reception.id}) }}" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer ce bon de livraison');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reception.id) }}">
-                        <button class="p-0 btn text-danger">Delete</button>
+                        <button class="p-0 btn text-danger">Supprimer</button>
                     </form>
                 </td>
             </tr>

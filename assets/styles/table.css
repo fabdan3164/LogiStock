@@ -5,8 +5,8 @@
 
 }
 
-tfoot {
-    background-color: red;
+.table td, .table thead th {
+    padding: 1% 0;
 }
 
 .table tbody tr  {
@@ -15,18 +15,20 @@ tfoot {
 
 .table thead th:first-child {
     border-left: 10px solid #E26D5C;
+    padding-left: 1%;
 }
+
 
 .table>:not(:first-child) {
     border-top: none;
 }
 tbody {
     display: block;
-    height: 30vh;
+    height: 60vh;
     border-color: rgba(77, 131, 135, 1);
     overflow: auto;
-
 }
+
 
 thead, tbody tr {
     display: table;

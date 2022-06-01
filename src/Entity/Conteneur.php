@@ -23,6 +23,7 @@ class Conteneur implements JsonSerializable
     #[ORM\Column(type: 'datetime')]
     private $dateReception;
 
+
     #[ORM\ManyToOne(targetEntity: Reception::class, inversedBy: 'conteneurs')]
     #[ORM\JoinColumn(nullable: false)]
     private $idReception;
@@ -124,5 +125,7 @@ class Conteneur implements JsonSerializable
             'idConteneur' => $this->id,
         );
     }
+
+
 
 }

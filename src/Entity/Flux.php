@@ -75,12 +75,12 @@ class Flux
         return $this;
     }
 
-    public function getOrigine(): ?int
+    public function getOrigine(): ?string
     {
         return $this->origine;
     }
 
-    public function setOrigine(?int $origine): self
+    public function setOrigine(?string $origine): self
     {
         $this->origine = $origine;
 

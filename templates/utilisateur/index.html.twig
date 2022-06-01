@@ -1,112 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Client{% endblock %}
 
 {% block body %}
-    <div class="row align-items-center justify-content-center mt-3">
-    <img class="col-3" src="{{ asset('img/separator.svg') }}">
-    <h1 class="text-center" >Client</h1>
+    <div class="row align-items-center justify-content-center mt-3 mb-3">
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+        <h1 class="text-center">Clients</h1>
         <img class="col-3" src="{{ asset('img/separator.svg') }}">
     </div>
-    <div class="container mt-4" >
-        <div class="row align-items-center justify-content-between flex-wrap">
-            {% for produit in produits %}
-
-                <div class="col-3" id="{{ produit.id }}">
-                    <div class="card-sl">
-                        <div class="card-image border border-white p-3" >
-                            {% if produit.image %}
-                                <img
-                                        alt="{{ produit.partNumber }}" src="{{ produit.image }}" />
-                                {% else %}
-                            <img
-                                    alt="no-image" src="{{ asset("img/no_image.png") }}"/>
-
-                            {% endif %}
-                            <input id="input{{ produit.id }}" style="visibility: hidden; height:0px" value="false">
-                        </div>
-
-                        <a class="card-action" onclick="zoom({{ produit.id }}),dezoom({{ produit.id }})"><i
-                                    class="fa-solid fa-magnifying-glass"></i></a>
-
-                        <div class="card-heading">
-                            {{ produit.denomination }}
-                        </div>
-
-                        <div class="card-text">
-                            Reférence : {{ produit.partNumber }}
-                            <br>
-                            <br>
-                            Prix unitaire: {{ produit.prixUnitaire }}
-                        </div>
-                        <a type="submit" class="card-button" href="{{ path('app_ligne_new', {'id': produit.id}) }}">Commander</a>
-
-                    </div>
-
-                </div>
-            {% endfor %}
+    <div class="container">
+        <div  class="row justify-content-start mb-3">
+            <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
         </div>
     </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Adresse</th>
+            <th>Téléphone</th>
+            <th>Email</th>
+            <th>Roles</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for utilisateur in utilisateurs %}
+            <tr>
+                <td>{{ utilisateur.id }}</td>
+                <td>{{ utilisateur.nom }}</td>
+                <td>{{ utilisateur.prenom }}</td>
+                <td>{{ utilisateur.adresse }}</td>
+                <td>{{ utilisateur.telephone }}</td>
+                <td>{{ utilisateur.email }}</td>
+                <td>
+                    {% if utilisateur.roles[0] == 'ROLE_ADMIN' %}
+                        Administrateur
+                    {% elseif   utilisateur.roles[0] == 'ROLE_LOG' %}
+                        Logisticien
+                    {% elseif   utilisateur.roles[0] == 'ROLE_USER' %}
+                        Client
+                    {% endif %}
+                </td>
 
-    <script>
+            </tr>
 
-        function zoom(id) {
-            let input = document.getElementById('input'+id);
 
-            if(input.value === 'false') {
-            input.value = 'true';
+        {% endfor %}
+        </tbody>
+    </table>
 
-            let card = document.getElementById(id);
-
-            let tabCards = document.getElementsByClassName('col-3')
-            for (let value of tabCards) {
-                if (value.id !== card.id) {
-                    value.classList.remove('visible');
-                    value.classList.add('invisible');
-                }
-            }
-            let childlink = document.getElementById(id).getElementsByTagName('a')[0];
-            childlink.classList.remove('invisible');
-            let childI = document.getElementById(id).getElementsByTagName('i')[0];
-            childI.classList.remove('fa-solid');
-            childI.classList.remove('fa-magnifying-glass');
-            childI.classList.add('fa-solid');
-            childI.classList.add('fa-xmark');
-            card.style.position = 'absolute';
-            card.style.transform = "translate(-50%, -50%)";
-            card.style.top = '50%';
-            card.style.left = '50%';
-            card.style.transition = '0.4s';
-                console.log(card)
-        }
-
-            else  {
-                input.value = 'false';
-                let card = document.getElementById(id);
-
-                let tabCards = document.getElementsByClassName('col-3')
-                for (let value of tabCards) {
-                    if (value.id !== card.id) {
-                        value.classList.remove('invisible');
-                        value.classList.add('visible');
-                    }
-                }
-                let childlink = document.getElementById(id).getElementsByTagName('a')[0];
-                childlink.classList.remove('visible');
-                let childI = document.getElementById(id).getElementsByTagName('i')[0];
-                childI.classList.remove('fa-solid');
-                childI.classList.remove('fa-xmark');
-                childI.classList.add('fa-solid');
-                childI.classList.add('fa-magnifying-glass');
-
-                card.style.position = 'relative';
-                card.style.transform = "translate(0%, 0%)";
-                card.style.top = '0';
-                card.style.left = '0';
-                card.style.transition = '0.4s';
-
-        } }
-
-    </script>
 
 {% endblock %}

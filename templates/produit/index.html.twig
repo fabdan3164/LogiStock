@@ -2,7 +2,9 @@
 
 {% block title %}Produit {% endblock %}
 
+
 {% block body %}
+
     <div class="container mt-3">
         <div class="row justify-content-center">
             <img class="col-3" src="{{ asset('img/separator.svg') }}">
@@ -16,19 +18,20 @@
             <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
 
             {% if is_granted('ROLE_ADMIN') %}
-                <a class="col-2" href="{{ path('app_produit_new') }}">Créer un produit <i
+                <a class="text-center col-1 p-0" href="{{ path('app_produit_new') }}">Créer un produit <i
                             class="fa-solid fa-arrow-right-to-bracket"></i></a>
             {% endif %}
         </div>
     </div>
 
-    <table class="table">
+    <table class="table text-center ">
         <thead>
         <tr class="row m-0">
             <th class="col-3">PartNumber</th>
-            <th class="col-2">Denomination</th>
+            <th class="col-1">Denomination</th>
             <th class="col-2">Fournisseur</th>
             <th class="col-2 text-center">PrixUnitaire</th>
+            <th class="col-1">Stock</th>
             <th class="col-1">StockMin</th>
             <th class="col-1">StockMax</th>
             <th class="col-1">Actions</th>
@@ -36,17 +39,36 @@
         </thead>
         <tbody>
         {% for produit in produits %}
-            <tr class="row m-0">
+            <tr class="row m-0 ">
 
-                <td class="col-3">{{ produit.partNumber }}</td>
-                <td class="col-2">{{ produit.denomination }}</td>
+                <td class="col-3 ">{{ produit.partNumber }}</td>
+                <td class="col-1">{{ produit.denomination }}</td>
                 <td class="col-2">{{ produit.fournisseur }}</td>
 
-                <td class="col-2 text-center">{{ produit.prixUnitaire }}</td>
-                <td class="col-1">{{ produit.stockMin }}</td>
-                <td class="col-1">{{ produit.stockMax }}</td>
+                <td class="col-2">{{ produit.prixUnitaire }}</td>
                 <td class="col-1">
-                    <a href="{{ path('app_produit_show', {'id': produit.id}) }}">Détail</a>
+
+                      {% set sum = 0 %}
+
+                    {% for conteneur in  produit.getConteneurs() %}
+                        {% set sum = sum + conteneur.quantite  %}
+                   {% endfor %}
+                    {{ sum }}
+
+                </td>
+                {% if  produit.stockMin and produit.stockMin > sum %}
+                <td class="col-1 alerteStock">{{ produit.stockMin }}</td>
+                    {% else %}
+                        <td class="col-1">{{ produit.stockMin }} </td>
+                {% endif %}
+
+                {% if  produit.stockMax and produit.stockMax < sum %}
+
+                <td class="col-1 alerteStock">{{ produit.stockMax }}</td>
+        {% else %}
+            <td class="col-1">{{ produit.stockMax }}</td>
+                {% endif %}
+                <td class="col-1">
 
                     {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">Modifier</a>

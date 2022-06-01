@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Conteneur;
 use App\Entity\Flux;
 use App\Form\ConteneurType;
+use App\Form\ConteneurTypeAjustement;
 use App\Form\ConteneurTypeMvt;
 use App\Repository\ConteneurRepository;
 use App\Repository\FluxRepository;
@@ -84,20 +85,38 @@ class ConteneurController extends AbstractController
     public function show(Conteneur $conteneur): Response
     {
         return $this->render('conteneur/show.html.twig', [
-            'conteneur' => $conteneur,
-        ]
+                'conteneur' => $conteneur,
+            ]
         );
     }
 
     #[Route('/{id}/edit', name: 'app_conteneur_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Conteneur $conteneur, ConteneurRepository $conteneurRepository): Response
+    public function edit(Request $request, Conteneur $conteneur, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository): Response
     {
-        $form = $this->createForm(ConteneurType::class, $conteneur);
+        $quantiteInit = $conteneur->getQuantite();
+
+        $form = $this->createForm(ConteneurTypeAjustement::class, $conteneur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $conteneurRepository->add($conteneur, true);
 
+//            Inscrit le mouvement d'ajustement dans la table flux
+            $flux = new Flux();
+            $flux->setDateFlux(new DateTime());
+
+            $quantite = $form['quantite']->getData() - $quantiteInit;
+
+            $flux->setQuantite($quantite);
+
+            $flux->setPartNumber($conteneur->getIdProduit());
+            $flux->setType("AJUSTEMENT");
+            $flux->setOrigine($request->get('commentaire'));
+            $flux->setAdresseStock($conteneur->getIdStock()->getAdresseStock());
+            $flux->setCodeConteneur($conteneur->getCodeConteneur());
+
+
+            $conteneurRepository->add($conteneur, true);
+            $fluxRepository->add($flux, true);
             return $this->redirectToRoute('app_conteneur_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -181,13 +200,13 @@ class ConteneurController extends AbstractController
     #[Route('/{id}/pdf', name: 'app_conteneur_print', methods: ['GET'])]
     public function printPdf($id, ConteneurRepository $conteneurRepository): Response
     {
-        $conteneur=$conteneurRepository->find($id);
+        $conteneur = $conteneurRepository->find($id);
 
         $blackColor = [0, 0, 0];
         $dataBarcode = $conteneur->getCodeConteneur();
         $generator = new BarcodeGeneratorPNG();
 
-        file_put_contents('barcode'.$dataBarcode.'.png', $generator->getBarcode($dataBarcode, 'C128', 3, 50, $blackColor), );
+        file_put_contents('barcode' . $dataBarcode . '.png', $generator->getBarcode($dataBarcode, 'C128', 3, 50, $blackColor),);
 
         return new Response($this->conteneurPdf($conteneur), 200, ['Content-Type' => 'application/pdf',]);
     }
@@ -221,7 +240,7 @@ class ConteneurController extends AbstractController
             "Attachment" => false
         ]);
 
-        unlink('barcode'.$conteneur.'.png');
+        unlink('barcode' . $conteneur . '.png');
     }
 
     #[Route('/json/{codeConteneur}', name: 'app_conteneur_json', methods: ['GET', 'POST'])]

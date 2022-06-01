@@ -13,7 +13,7 @@
     </div>
 
     <div class="container">
-        <div  class="row justify-content-end mb-3">
+        <div  class="row justify-content-start mb-3">
             <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
         </div>
     </div>
@@ -21,32 +21,51 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Adresse</th>
-                <th>CodeConteneur</th>
-                <th>Quantité</th>
-                <th>Produit</th>
-                <th>DateReception</th>
-                <th>actions</th>
+                <th class="col-md-1">Adresse</th>
+                <th class="col-md-2">CodeConteneur</th>
+                <th class="col-md-1">Quantité</th>
+                <th class="col-md-1">Coût</th>
+                <th class="col-md-3">Produit</th>
+                <th class="col-md-2">Date de Réception</th>
+                <th class="col-md-2">Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for conteneur in conteneurs %}
             <tr>
-                <td>{{ conteneur.idStock }}</td>
-                <td>{{ conteneur.codeConteneur }}</td>
-                <td>{{ conteneur.quantite }}</td>
-                <td>{{ conteneur.IdProduit }}</td>
-                <td>{{ conteneur.dateReception ? conteneur.dateReception|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_flux_show' , {'codeConteneur': conteneur.codeConteneur}) }}">Détail</a>
-                    <a href="{{ path('app_conteneur_edit', {'id': conteneur.id}) }}">Ajustement</a>
+                <td class="col-md-1">{{ conteneur.idStock }}</td>
+                <td class="col-md-2">{{ conteneur.codeConteneur }}</td>
+                <td class="col-md-1">{{ conteneur.quantite }}</td>
+                <td class="col-md-1">{{ (conteneur.idProduit.prixUnitaire * conteneur.quantite)|number_format(2, '.', ',')}} €</td>
+                <td class="col-md-3">{{ conteneur.IdProduit }}</td>
+                <td class="col-md-2">{{ conteneur.dateReception ? conteneur.dateReception|date('Y-m-d H:i:s') : '' }}</td>
+                <td class="col-md-2" >
+                    <a href="{{ path('app_flux_show' , {'codeConteneur': conteneur.codeConteneur}) }}">Détail |</a>
+                    <a href="{{ path('app_conteneur_edit', {'id': conteneur.id}) }}">Ajustement |</a>
+                    <a href="{{ path('app_conteneur_print', {'id': conteneur.id}) }}">Imprimer</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">Aucune donnée</td>
             </tr>
         {% endfor %}
+        <tr>
+            <td class="col-md-1"> </td>
+            <td class="col-md-2"> </td>
+            <td class="col-md-1"> Total</td>
+            <td class="col-md-1"> {% set sum = 0 %}
+                {% for conteneur in conteneurs %}
+
+                    {% set sum = (sum + (conteneur.idProduit.prixUnitaire * conteneur.quantite))|number_format(2, '.', ',') %}
+
+                {% endfor %}
+                {{ sum }} €
+            </td>
+            <td class="col-md-3"> </td>
+            <td class="col-md-2"> </td>
+            <td class="col-md-2"> </td>
+        </tr>
         </tbody>
     </table>
 

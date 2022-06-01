@@ -11,6 +11,16 @@
         <img class="col-3" src="{{ asset('img/separator.svg') }}">
     </div>
 </div>
+    <div class="container">
+        <div class="row justify-content-between">
+            <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+
+
+                <a class="text-center col-1 p-0" href="{{ path('app_flux') }}">Retour<i
+                            class="fa-solid fa-arrow-right-to-bracket"></i></a>
+
+        </div>
+    </div>
 
 <table class="table table-striped mt-3 border-white">
     <thead>
@@ -42,5 +52,5 @@
         </tr>
     {% endfor %}
     </tbody>
-
+    </table>
 {% endblock %}
