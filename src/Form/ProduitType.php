@@ -26,8 +26,9 @@ class ProduitType extends AbstractType
                     'maxSize' => '4M',
                     'mimeTypes' => [
                         'image/png',
+                        'image/jpeg',
                     ],
-                    'mimeTypesMessage' => 'Merci de télécharger un document au format JPEG',
+                    'mimeTypesMessage' => 'Merci de télécharger un document au format JPEG ou PNG',
                 ])
             ]
             ])

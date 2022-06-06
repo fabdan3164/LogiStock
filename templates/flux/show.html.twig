@@ -16,7 +16,7 @@
             <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
 
 
-                <a class="text-center col-1 p-0" href="{{ path('app_flux') }}">Retour<i
+                <a class="text-center col-1 p-0" href="{{ app.request.headers.get('referer') }}">Retour<i
                             class="fa-solid fa-arrow-right-to-bracket"></i></a>
 
         </div>

@@ -13,11 +13,13 @@
             <div class="row align-items-center justify-content-center">
                 <img class="col-3" src="{{ asset('img/separator.svg') }}">
                 <h1 class="text-center">{{ produit.description }}</h1>
+
                 <img class="col-3" src="{{ asset('img/separator.svg') }}">
             </div>
         </div>
         <div class="card-image">
-            <a class="card-action" href="{{ path('app_main') }}"><i class="fa-solid fa-backward"></i></a>
+            <a class="card-action" href="{{ app.request.headers.get('referer')
+            }}"><i class="fa-solid fa-backward"></i></a>
             {% if produit.image %}
                 <img
                        class="p-5" alt="{{ produit.partNumber }}" src="{{ asset(produit.image) }}"/>
