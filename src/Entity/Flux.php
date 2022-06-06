@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\FluxRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: FluxRepository::class)]
 class Flux
 {

@@ -3,52 +3,71 @@
 {% block title %}Commandes{% endblock %}
 
 {% block body %}
-<div class="row align-items-center justify-content-center mt-3">
-    <img class="col-3" src="{{ asset('img/separator.svg') }}">
-    <h1 class="text-center">Commandes</h1>
-    <img class="col-3" src="{{ asset('img/separator.svg') }}">
-</div>
-<div class="container">
-    <div class="row justify-content-start mb-3">
-        <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+    <div class="row align-items-center justify-content-center mt-3">
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+        <h1 class="text-center">Commandes</h1>
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
     </div>
-</div>
-<table class="table">
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Numéro de Commande</th>
-        <th>Statut</th>
-        <th>Date de Commande</th>
-        <th>Client</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for commande in commandes %}
-    {% if  app.user %}
-    {% if is_granted('ROLE_LOG') or  app.user.id == commande.idUtilisateur.id %}
-    <tr>
-        <td>{{ commande.id }}</td>
-        <td>{{ commande.numeroCommande }}</td>
-        <td>{{ commande.idStatut }}</td>
-        <td>{{ commande.dateCommande ? commande.dateCommande|date('Y-m-d H:i:s') : '' }}</td>
-        <td>{{ commande.idUtilisateur.identifiant }}</td>
-        <td>
-            <a href="{{ path('app_commande_show', {'id': commande.id}) }}">Détail</a>
+    <div class="container">
+        <div class="row justify-content-start mb-3">
+            <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
 
-            <a href="{{ path('app_commande_print', {'id': commande.id}) }}">Impression</a>
-            {% if commande.idStatut == 'En attente' %}
-            <a href="{{ path('app_commande_preparation', {'id': commande.id}) }}">Préparer</a>
+            <th>Numéro de Commande</th>
+            <th>Statut</th>
+            <th>État d'avancement</th>
+            <th>Date de Commande</th>
+            <th>Client</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for commande in commandes %}
+            {% if  app.user %}
+                {% if is_granted('ROLE_LOG') or  app.user.id == commande.idUtilisateur.id %}
+                    <tr>
+
+                        <td>{{ commande.numeroCommande }}</td>
+                        <td>{{ commande.idStatut }}</td>
+                        <td>
+                            {% set lignes = commande.getLignes() %}
+                            {% set lignesTotal =  lignes|length %}
+                            {% set lignesEnCours = 0 %}
+                            {% for ligne in lignes %}
+                                {% if ligne.idStatut == 'Préparé' %}
+                                {%  set lignesEnCours = lignesEnCours + 1%}
+                            {% endif %}
+                            {% endfor %}
+                            {{ (lignesEnCours/lignesTotal)*100|round(2) }} %
+                        </td>
+                        <td>{{ commande.dateCommande ? commande.dateCommande|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ commande.idUtilisateur.identifiant }}</td>
+                        <td>
+                            <a href="{{ path('app_commande_show', {'id': commande.id}) }}"> <i
+                                        class="fa-solid fa-circle-info"></i></a>
+
+                            <a href="{{ path('app_commande_print', {'id': commande.id}) }}"> | <i
+                                        class="fa-solid fa-print"></i></a>
+                            {% if commande.idStatut == 'En attente' %}
+                                <a href="{{ path('app_commande_preparation', {'id': commande.id}) }}"> | <i
+                                            class="fa-solid fa-cart-flatbed"></i></a>
+                            {% endif %}
+
+                            {% if commande.idStatut == 'En attente de validation' %}
+                                <a href="{{ path('app_commande_valide', {'id': commande.id}) }}"> | <i class="fa-solid fa-check"></i></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                {% endif %}
             {% endif %}
-        </td>
-    </tr>
 
-    {% endif %}
-    {% endif %}
-
-    {% endfor %}
-    </tbody>
-</table>
+        {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}

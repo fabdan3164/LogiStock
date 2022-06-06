@@ -9,9 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Asserts;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[UniqueEntity(fields: ['identifiant'], message: 'There is already an account with this identifiant')]
+
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -41,6 +43,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private $telephone;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Asserts\Email(
+        message: 'L\'email {{ value }} n\'est pas valide.',
+    )]
     private $email;
 
     #[ORM\OneToMany(mappedBy: 'idUtilisateur', targetEntity: Commande::class)]

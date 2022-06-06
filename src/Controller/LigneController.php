@@ -40,7 +40,7 @@ class LigneController extends AbstractController
         $ligne = new Ligne();
 
         //Définir le statut en attente de validation
-        $ligne->setIdStatut($statutRepository->find(1));
+        $ligne->setIdStatut($statutRepository->find(4));
 
         //Définir le produit
         $ligne->setIdProduit($produitRepository->find($id));
@@ -73,7 +73,7 @@ class LigneController extends AbstractController
         }
 
         //Soustraire la quantité totale deja commandé
-        $commandesTotal = $ligneRepository->findBy(['idProduit' => $id,'idStatut'=> [1,2,4]]);
+        $commandesTotal = $ligneRepository->findBy(['idProduit' => $id, 'idStatut' => [1, 2, 4]]);
         foreach ($commandesTotal as $commande) {
             $quantiteEnStock -= $commande->getQuantite();
         }
@@ -92,7 +92,7 @@ class LigneController extends AbstractController
 
             $ligne->setQuantite($form['quantite']->getData());
 
-            
+
             $ligneRepository->add($ligne, true);
 
             return $this->redirectToRoute('app_main', [], Response::HTTP_SEE_OTHER);
@@ -131,7 +131,7 @@ class LigneController extends AbstractController
             }
 
             //Soustraire la quantité totale deja commandé et dont les commande n'ont pas été préparé
-            $commandesTotal = $ligneRepository->findBy(['idProduit' => $ligne->getIdProduit()->getId(),'idStatut'=> [1,2,4] ]);
+            $commandesTotal = $ligneRepository->findBy(['idProduit' => $ligne->getIdProduit()->getId(), 'idStatut' => [1, 2, 4]]);
 
             foreach ($commandesTotal as $commande) {
                 $quantiteEnStock -= $commande->getQuantite();
@@ -141,7 +141,7 @@ class LigneController extends AbstractController
             //Si la quantité commandée est supérieur à celle stocké renvoyer un addFlash
             if (($form['quantite']->getData()) > $quantiteEnStock) {
 
-                $quantiteEnStock = $quantiteEnStock+$ligne->getQuantite();
+                $quantiteEnStock = $quantiteEnStock + $ligne->getQuantite();
                 // Add Flash d'alerte
                 $this->addFlash('surStock', 'Désolé vous ne pouvez pas commander plus de ' . $quantiteEnStock . ' unités de ce produit.');
 
@@ -150,7 +150,7 @@ class LigneController extends AbstractController
 
             $ligneRepository->add($ligne, true);
 
-            return $this->redirectToRoute('app_commande_show', ['id'=>$ligne->getIdCommande()->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_commande_show', ['id' => $ligne->getIdCommande()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('ligne/edit.html.twig', [
@@ -172,16 +172,19 @@ class LigneController extends AbstractController
 
     #[isGranted("ROLE_USER")]
     #[Route('validationPreparation/{id}/{idConteneur}', name: 'app_ligne_statut', methods: ['GET'])]
-    public function statut($idConteneur, Ligne $ligne, LigneRepository $ligneRepository, StatutRepository $statutRepository, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository,CommandeRepository $commandeRepository): Response
+    public function statut($idConteneur, Ligne $ligne, LigneRepository $ligneRepository, StatutRepository $statutRepository, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository, CommandeRepository $commandeRepository): Response
     {
 
         //Ajuster les quantités sur le conteneur prélevé
         $quantite = $ligne->getQuantite();
         $conteneur = $conteneurRepository->find($idConteneur);
         $conteneur->setQuantite($conteneur->getQuantite() - $quantite);
+        $conteneurRepository->add($conteneur, true);
+
 
         //Définir le statut de la ligne comme étant préparé
         $ligne->setIdStatut($statutRepository->find(3));
+        $ligneRepository->add($ligne, true);
 
         //Enregistrer la sortie de stock dans la table flux
         $flux = new Flux();
@@ -193,19 +196,17 @@ class LigneController extends AbstractController
         $flux->setCodeConteneur($conteneur->getCodeConteneur());
         $flux->setAdresseStock($conteneur->getIdStock());
 
-        $conteneurRepository->add($conteneur);
-
+        $fluxRepository->add($flux, true);
+        $conteneur =  $conteneurRepository->find($conteneur->getId());
         // Si le conteneur est vide le supprimer
         if ($conteneur->getQuantite() === 0) {
-            $conteneurRepository->remove($conteneur);
+            $conteneurRepository->remove($conteneur, true);
         }
 
-        $ligneRepository->add($ligne, true);
-        $fluxRepository->add($flux, true);
+
 
         return $this->redirectToRoute('app_commande_preparation', ['id' => $ligne->getIdCommande()->getId()], Response::HTTP_SEE_OTHER);
     }
-
 
 
 }

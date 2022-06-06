@@ -4,17 +4,10 @@
 
 {% block body %}
 
-
-
-
-
-
     <div class="container ">
         <div class="row align-items-center justify-content-center">
 
             <div class="card-sl col-12 p-0 m-0">
-
-
 
                 <div class="card-heading">
                     <div class="row align-items-center justify-content-center">
@@ -27,6 +20,7 @@
                 <div class=" p-0 mt-5">
 
                     {{ form_start(registrationForm, {'attr': {'class': 'row m-0 justify-content-center'}})  }}
+
 
 
                     <div class=" row justify-content-between col-7 ">
@@ -58,6 +52,7 @@
                     </div>
 
                     <div class="row justify-content-between col-7 mt-4">
+                        {{ form_errors(registrationForm.email) }}
                         {{ form_label(registrationForm.email, 'Email', { 'label_attr': {'class': 'col-4'}}) }}
                         {{ form_widget(registrationForm.email, {'attr': {'class': 'col-8'}}) }}
                     </div>

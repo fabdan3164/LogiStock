@@ -9,6 +9,7 @@ use App\Repository\CommandeRepository;
 use App\Repository\ConteneurRepository;
 use App\Repository\LigneRepository;
 use App\Repository\StatutRepository;
+use App\Repository\StockRepository;
 use DateTime;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -42,44 +43,106 @@ class CommandeController extends AbstractController
 
     #[isGranted("ROLE_LOG")]
     #[Route('/select/{id}', name: 'app_commande_preparation', methods: ['GET'])]
-    public function preparationCommande($id, CommandeRepository $commandeRepository, ConteneurRepository $conteneurRepository, LigneRepository $ligneRepository, StatutRepository $statutRepository): Response
+    public function preparationCommande($id, CommandeRepository $commandeRepository, ConteneurRepository $conteneurRepository, LigneRepository $ligneRepository, StatutRepository $statutRepository, StockRepository $stockRepository): Response
 
     {
         // Obtenir un tableau des lignes de commande à préparer
         $lignes = $ligneRepository->findBy(['idCommande' => $id, 'idStatut' => 1]);
 
-        // l'implementer avec les conteneurs dans lesquelles on va prélever
+        //Définir les lignes en statut en cours
         foreach ($lignes as $ligne) {
-            $ligne->conteneur = $conteneurRepository->findBy(['idProduit' => $ligne->getIdProduit()], ['idStock' => 'ASC'], 1);
+            $ligne->setIdStatut($statutRepository->find(2));
+            $ligneRepository->add($ligne, true);
+        }
 
-            //Si la quantité commandée est supérieur à la quantité dans le conteneur, supprimer la ligne et en créer une autre
-            if ($ligne->getQuantite() > $ligne->conteneur[0]->getQuantite()) {
+        // Obtenir un tableau des lignes de commande en cours
+        $lignes = $ligneRepository->findBy(['idCommande' => $id, 'idStatut' => 2]);
 
-                $ligne2 = new Ligne();
-                $ligne2->setQuantite($ligne->getQuantite() - $ligne->conteneur[0]->getQuantite());
-                $ligne2->setIdStatut($ligne->getIdStatut());
-                $ligne2->setIdProduit($ligne->getIdProduit());
-                $ligne2->setIdCommande($ligne->getIdCommande());
-                $ligneRepository->add($ligne2, true);
 
-                $ligne->setQuantite($ligne->conteneur[0]->getQuantite());
+        // l'implémenter avec les conteneurs dans lesquelles on va prélever
+        foreach ($lignes as $ligne) {
+
+            // Si le conteneur est vide en affecter un autre et supprimer celui qui est vide
+            if ($ligne->getConteneurLigne() && $ligne->getConteneurLigne()->getquantite() === 0) {
+                $objCont = $conteneurRepository->findBy(['idProduit' => $ligne->getIdProduit()], ['idStock' => 'ASC'], 2);
+                $objCont = $conteneurRepository->find($objCont[0]->getId());
+                $ligne->setConteneurLigne($objCont);
+
+                $conteneurRepository->remove($conteneurRepository->find($objCont[0]->getId(), true));
                 $ligneRepository->add($ligne, true);
+            }
+
+            if (!$ligne->getConteneurLigne()) {
+                //Ajouter le premier conteneur trouvé dans l'ordre par idStock
+                $objCont = $conteneurRepository->findBy(['idProduit' => $ligne->getIdProduit()], ['idStock' => 'ASC'], 1);
+                $objCont = $conteneurRepository->find($objCont[0]->getId());
+                $ligne->setConteneurLigne($objCont);
+                $ligneRepository->add($ligne, true);
+            }
+
+            // Re-Obtenir la lignes de commande en cours
+            $ligne = $ligneRepository->find($ligne->getId());
+
+
+        }
+
+
+        foreach ($lignes as $ligne) {
+            $ligne1 = $ligneRepository->find($ligne->getId());
+
+            // Si la quantité commandée est supérieur à la quantité dans le conteneur, modifier la ligne et en créer  d'autre
+            if ($ligne1->getQuantite() > $ligne->getConteneurLigne()->getquantite()) {
+
+            // Appeler tout les conteneurs sur lesquels trouver le produit
+                $conteneurProduits = $conteneurRepository->findBy(['idProduit' => $ligne->getIdProduit()], ['idStock' => 'ASC']);
+
+                //excepter le premier qui est affecté à la ligne d'origine
+                array_shift($conteneurProduits) ;
+
+
+            // Calculer la quantité restante à prélever ;
+                $quantiteRestante = ($ligne1->getQuantite() - $ligne->getConteneurLigne()->getquantite());
+
+
+                // Verifier dans combien de conteneur repartir la liste
+                foreach ($conteneurProduits as  $conteneurProduit) {
+
+//                     MAJ quantite restante à chaque tour de boucle
+                    $quantiteRestante =  $quantiteRestante - $conteneurProduit->getQuantite();
+
+                    // MAJ ligneBisc auantite à chaque tour de boucle, jusqu'a ce que la quantité restante soit égale à 0
+                    $ligneBisQuantite = $conteneurProduit->getQuantite() ;
+                    if($quantiteRestante <= 0)
+                    {
+                        $ligneBisQuantite = $quantiteRestante + $conteneurProduit->getQuantite();
+                    }
+
+                    //Créer une nouvelle ligne et lui passer tous les paramètres nécessaires
+                    $ligneBis = new Ligne();
+                    $ligneBis->setQuantite($ligneBisQuantite);
+                    $ligneBis->setIdStatut($ligne1->getIdStatut());
+                    $ligneBis->setIdProduit($ligne1->getIdProduit());
+                    $ligneBis->setIdCommande($ligne1->getIdCommande());
+                    $ligneBis->setConteneurLigne($conteneurProduit);
+
+                    //MAJ des lignes
+                    $ligneRepository->add( $ligneBis, true);
+
+                    // Supprimer le conteneur utiliser du tableau
+                    array_shift($conteneurProduits) ;
+
+                    // Sortir de la boucle une fois toute la quantité commandée répartie
+                    if($quantiteRestante <=0 ){
+                        break;
+                    }
+                }
+
+                //MAJ de la ligne!
+                $ligne1->setQuantite($ligne->getConteneurLigne()->getquantite());
+                $ligneRepository->add($ligne1, true);
             }
         }
 
-
-        // Trier le tableau par adresse de stockage pour suivre la route numérique de préparation
-        usort($lignes, function ($a, $b) {
-            return strcmp($a->conteneur[0]->getidStock(), $b->conteneur[0]->getidStock());
-        });
-
-
-        // S'il n'y a plus de ligne à préparer définir le statut de commande à préparer
-        if (!$lignes) {
-            $commande = $commandeRepository->find($id);
-            $commande->setIdStatut($statutRepository->find(3));
-            $commandeRepository->add($commande, true);
-        }
 
         // Passer le statut de la commande à en cours
         $commande = $commandeRepository->find($id);
@@ -88,10 +151,22 @@ class CommandeController extends AbstractController
             $commandeRepository->add($commande, true);
         }
 
+
+        //Rappeler le tableau lignes avec les conteneurs ajouté
+        $lignes = $ligneRepository->findBy(['idCommande' => $id, 'idStatut' => 2]);
+
+        // Trier le tableau de lignes par adresse de stockage pour suivre la route numérique de préparation
+        usort($lignes, function ($a, $b) {
+            if($a->getConteneurLigne()->getidStock()->getId() == $b->getConteneurLigne()->getidStock()->getId()){ return 0 ; }
+            return ($a->getConteneurLigne()->getidStock()->getId() < $b->getConteneurLigne()->getidStock()->getId()) ? -1 : 1;
+        });
+
+
         // Retourner la vue pour continuer la préparation
         return $this->render('commande/preparation.html.twig', [
             'commande' => $commandeRepository->find($id),
             'lignes' => $lignes,
+            'stocks' => $stockRepository->findAll(),
         ]);
     }
 
@@ -128,13 +203,14 @@ class CommandeController extends AbstractController
 
 //    //TO DO etudier suppresion
     #[Route('/{id}', name: 'app_commande_show', methods: ['GET'])]
-    public function show(Commande $commande, LigneRepository $ligneRepository): Response
+    public function show(Commande $commande, LigneRepository $ligneRepository, StockRepository $stockRepository): Response
     {
         $lignes = $ligneRepository->findBy(['idCommande' => $commande->getId()]);
-
+        $stocks = $stockRepository->findAll();
         return $this->render('commande/show.html.twig', [
             'commande' => $commande,
-            'lignes' => $lignes
+            'lignes' => $lignes,
+            'stocks' => $stocks
         ]);
     }
 
@@ -160,13 +236,8 @@ class CommandeController extends AbstractController
     public function prepare(CommandeRepository $commandeRepository, StatutRepository $statutRepository, $id): Response
     {
 
-        //Récupérer la commande en cours
         $commande = $commandeRepository->find($id);
-
-        //En définir le statut à préparer
         $commande->setIdStatut($statutRepository->find(3));
-
-        //MAJ statut commande
         $commandeRepository->add($commande, true);
 
         return $this->redirectToRoute('app_commande_select', [], Response::HTTP_SEE_OTHER);

@@ -43,13 +43,14 @@
                 <td>{{ stock.multiStockage ? 'Yes' : 'No' }}</td>
                 <td>
                     {% for conteneur in stock.getConteneurs() %}
-                        {{ conteneur.codeConteneur }} </br>
+                        {{ conteneur.codeConteneur }}     <a href="{{ path('app_conteneur_mouvement', {'id': conteneur.id}) }}"> <i class="fa-solid fa-dolly"></i> </a></br>
+
                     {% endfor %}
                 </td>
                 {% if is_granted('ROLE_ADMIN') %}
                     <td>
 
-                        <a href="{{ path('app_stock_edit', {'id': stock.id}) }}">Modifier</a>
+                        <a href="{{ path('app_stock_edit', {'id': stock.id}) }}"><i class="fa-solid fa-pen-to-square"></i></a>
                     </td>
                 {% endif %}
             </tr>

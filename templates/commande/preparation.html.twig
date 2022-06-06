@@ -14,11 +14,7 @@
     {% endfor %}
 
 
-    <div class="row align-items-center justify-content-center">
-        <img class="col-3" src="{{ asset('img/separator.svg') }}">
-        <h1 class="text-center">Commande {{ commande }}</h1>
-        <img class="col-3" src="{{ asset('img/separator.svg') }}">
-    </div>
+
 
     <div class="row justify-content-center container p-0 m-0">
 
@@ -27,26 +23,39 @@
             <div class="row align-items-center justify-content-center p-0 mt-4">
 
                 <div class="card-sl col-12 p-0">
-                    <div class="card-image border border-white">
+                    <div class="card-heading text-center">
+                        <div class="row align-items-center justify-content-center">
+                            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                            <h1 class="text-center">Commande {{ commande }}</h1>
+                            <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                        </div>
+                    </div>
 
+                    <div class="card-image border border-white">
+                        <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
                         <img
                                 class="p-5"  alt="ecrou" src="{{ asset("img/ecrou.png") }}"/>
 
                     </div>
 
-                    <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
-                    <div class="card-heading text-center">
-                        {{ lignes[0].idProduit.denomination }} {{ lignes[0].idProduit.PartNumber }}
-                    </div>
 
-                    <div class="card-text p-0 text-center">
-                        Rendez vous à l'adresse {{ lignes[0].conteneur[0].idStock }}. <br>
+
+                    <div class="card-text p-0 text-center pb-3">
+                        <h4>     {{ lignes[0].idProduit.denomination }} {{ lignes[0].idProduit.PartNumber }}</h4>
+                         Rendez vous à l'adresse
+                        {% for stock in stocks %}
+                            {% if lignes[0].conteneurLigne is not null  and stock.getId() == lignes[0].conteneurLigne.getIdStock().getId() %}
+                                {{ stock.getAdresseStock()  }}
+                            {% endif %}
+                        {% endfor %}
+                        <br>
                         Prélever {{ lignes[0].quantite }} {{ lignes[0].idProduit.denomination }} dans le
-                        conteneur <br>{{ lignes[0].conteneur[0].codeConteneur }} part
+                        conteneur <br>{{ lignes[0].conteneurLigne.getCodeConteneur() }} part
                         number {{ lignes[0].idProduit.PartNumber }}
 
-                        <a class="card-button mt-3"
-                           href="{{ path('app_ligne_statut', {'id': lignes[0].id, 'idConteneur': lignes[0].conteneur[0].id} ) }}">Valider</a>
+
+                        <a  style="width:20%; border-radius: 8px 8px; margin:1px auto;" class="card-button mt-3"
+                           href="{{ path('app_ligne_statut', {'id': lignes[0].id, 'idConteneur': lignes[0].conteneurLigne.getId()} ) }}">Valider</a>
 
 
                     </div>
@@ -77,14 +86,9 @@
                         <div class="card-heading text-center ps-5">
                             <h5>Commande Terminée</h5>
                         </div>
-
-
-
-                            <a class="card-button-bis mt-3 " style="width:20%; border-radius: 8px 8px; margin:1px auto;" href="{{ path('app_commande_prepare' , {'id': commande.id}) }}">Sélectionner
-                                une autre commande</a>
+                            <a class="card-button-bis mt-3 " style="width:20%; border-radius: 8px 8px; margin:1px auto;" href="{{ path('app_commande_prepare' , {'id': commande.id}) }}">Valider la commande</a>
                             <a class="card-button mt-3 mb-3"  style="width:20%; border-radius: 8px 8px; margin:1px auto;" href="{{ path('app_commande_print', {'id': commande.id}) }}">Imprimer
                                 le bon de commande</a>
-
 
                     </div>
                 </div>

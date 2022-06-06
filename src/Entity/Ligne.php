@@ -28,7 +28,9 @@ class Ligne
     #[ORM\JoinColumn(nullable: false)]
     private $idCommande;
 
-    public array|null $conteneur = null ;
+    #[ORM\Column(type: 'object', nullable: true)]
+    private $conteneurLigne;
+
 
     public function getId(): ?int
     {
@@ -88,5 +90,16 @@ class Ligne
         return $this->id;
     }
 
+    public function getConteneurLigne(): ?object
+    {
+        return $this->conteneurLigne;
+    }
+
+    public function setConteneurLigne(?object $conteneurLigne): self
+    {
+        $this->conteneurLigne = $conteneurLigne;
+
+        return $this;
+    }
 
 }

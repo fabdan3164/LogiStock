@@ -5,10 +5,6 @@
 {% block body %}
 
 
-
-
-
-
     <div class="container mt-4">
         <div class="row align-items-center justify-content-center">
 
@@ -22,13 +18,11 @@
                     </div>
 
                     <div class="card-image border border-white">
-
+                        <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
                         <img
-                                alt="no-image" src="{{ asset("img/forklift.png") }}"/>
+                                class="p-5"    alt="logo" src="{{ asset("img/logo.svg") }}"/>
 
                     </div>
-
-                    <a class="card-action" href="/"><i class="fa-solid fa-backward"></i></a>
 
 
                     <div class="card-text text-center p-0">
@@ -37,9 +31,13 @@
                             <label  class="col-4 mt-3 w-100 " for="codeConteneur"> Sélectionner/Scanner un code Conteneur</label>
                             <input class="col-4 mt-3" id="codeConteneur" onblur="test()" type="text">
 
+                            <div class="col-12 m-3">
+                                <button class="card-button mt-3 border-0" type="button" style="width:20%; border-radius: 8px 8px; margin:1px auto;" onclick="codeConteneurControl()">Valider</button>
+                            </div>
                         </form>
-                        <button class="card-button mt-3 border-0" type="button" onclick="codeConteneurControl()">Valider</button>
+
                     </div>
+
                 </div>
         </div>
     </div>

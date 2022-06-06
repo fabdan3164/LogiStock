@@ -25,7 +25,7 @@ class ProduitType extends AbstractType
                 new File([
                     'maxSize' => '4M',
                     'mimeTypes' => [
-                        'image/jpeg',
+                        'image/png',
                     ],
                     'mimeTypesMessage' => 'Merci de télécharger un document au format JPEG',
                 ])

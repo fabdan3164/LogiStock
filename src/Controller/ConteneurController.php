@@ -19,6 +19,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\String\ByteString;
 
 #[isGranted("ROLE_LOG")]
@@ -48,7 +50,7 @@ class ConteneurController extends AbstractController
         $conteneur->setDateReception(new DateTime());
         $conteneur->setIdStock($stockRepository->find(1));
 
-        //        Créer un code conteneur aléatoire et unique
+        // Créer un code conteneur aléatoire et unique
         $codeConteneur = 'CONT-' . ByteString::fromRandom(15, '0123456789');
         if ($conteneurRepository->findby(['codeConteneur' => $codeConteneur])) {
             $conteneur->setCodeConteneur('CONT-' . ByteString::fromRandom(15, '0123456789'));
@@ -72,7 +74,13 @@ class ConteneurController extends AbstractController
             $flux->setCodeConteneur($conteneur->getCodeConteneur());
             $conteneurRepository->add($conteneur, true);
             $fluxRepository->add($flux, true);
-            return $this->redirectToRoute('app_conteneur_index', [], Response::HTTP_SEE_OTHER);
+
+            // Add Flash d'impression avec lien pour imprimer
+            $url = $this->generateUrl('app_conteneur_print', ['id' => $conteneur->getId()], UrlGenerator::ABSOLUTE_URL);
+            $this->addFlash('imprimerConteneur',
+                sprintf('Imprimer le code conteneur et le coller dessus <br/><a href="%s"><i class="fa-solid fa-print"></i></a>', $url));
+
+            return $this->redirectToRoute('app_conteneur_new', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('conteneur/new.html.twig', [

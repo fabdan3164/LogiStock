@@ -6,7 +6,6 @@
 
 
 
-
     <div class="container mt-4">
         <div class="row align-items-center justify-content-center">
 
@@ -15,7 +14,7 @@
                 <div class="card-sl">
 
 
-                    <div class="card-heading text-center">
+                    <div class="card-heading text-center p-0">
 
                         <div class="row align-items-center justify-content-center">
                             <img class="col-3" src="{{ asset('img/separator.svg') }}">
@@ -23,18 +22,30 @@
                             <img class="col-3" src="{{ asset('img/separator.svg') }}">
 
                         </div>
+                        {% for message in app.flashes('imprimerConteneur') %}
+                            <div class="alert alert-secondary  fade show m-0 pt-3">
+                                {{ message|raw }}
+                                <br/>
+                                <br/>
+                                <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
 
                     </div>
 
-                    {{ form_start(form, {'attr': {'class': 'row m-0 justify-content-center'}}) }}
-                    <span class="text-center mt-5">Saisir la quantité à réceptionner</span>
+
+                    {{ form_start(form, {'attr': {'class': 'row m-0 justify-content-center text-center'}}) }}
+                    {{ form_label(form.quantite, 'Saisir la quantité à réceptionner', { 'label_attr': {'class': 'mt-4'}}) }}
                     {{ form_widget(form.quantite, {'attr': {'class': 'col-4 mt-2 text-center  '}}) }}
-                    <span class="text-center mt-5"> Sélectionner le Bon De Livraison</span>
+                    {{ form_label(form.idReception, 'Sélectionner le Bon De Livraison', { 'label_attr': {'class': 'mt-4'}}) }}
                     {{ form_widget(form.idReception, {'attr': {'class': 'col-4 mt-2 text-center  '}}) }}
-                     <span class="text-center mt-5">Sélectionner le Part Number à réceptionner</span>
+                    {{ form_label(form.idProduit, 'Sélectionner le Part Number à réceptionner', { 'label_attr': {'class': 'mt-4'}}) }}
                     {{ form_widget(form.idProduit, {'attr': {'class': 'col-4 mt-2 text-center  '}}) }}
                     <div class="col-12 m-5">
-                        <button type="submit" class="card-button" style="width:20%; border-radius: 8px 8px; margin:1px auto;">
+                        <button type="submit" class="card-button"
+                                style="width:20%; border-radius: 8px 8px; margin:1px auto;">
                             Valider
                         </button>
                     </div>

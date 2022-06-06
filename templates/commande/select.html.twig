@@ -3,11 +3,7 @@
 {% block title %}Commandes à préparer{% endblock %}
 
 {% block body %}
-    <div class="row align-items-center justify-content-center">
-        <img class="col-3" src="{{ asset('img/separator.svg') }}">
-        <h1 class="text-center">Commandes à préparer</h1>
-        <img class="col-3" src="{{ asset('img/separator.svg') }}">
-    </div>
+
 
 
 
@@ -15,6 +11,13 @@
         <div class="row align-items-center justify-content-center">
 
             <div class="card-sl col-12 p-0">
+                <div class="card-heading text-center ps-5">
+                    <div class="row align-items-center justify-content-center">
+                        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                        <h1 class="text-center">Commandes à préparer</h1>
+                        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+                    </div>
+                </div>
                 <div class="card-image border border-white">
 
                     <img
@@ -42,7 +45,9 @@
                             {%endfor  %}
                         </select>
                     </form>
-                    <button class="card-button mt-3" type="button" onclick="preparer()"> Lancer la préparation</button>
+                    <div class="col-12 pb-3">
+                    <button class="card-button mt-3" type="button"  style="width:20%; border-radius: 8px 8px; margin:1px auto;" onclick="preparer()"> Lancer la préparation</button>
+                    </div>
                     {% else %}
 
                         <h5 class=" text-center col-12 p-4"> Aucune commande a préparer </h5>
