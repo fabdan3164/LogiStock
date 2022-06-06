@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-
+    #[isGranted("ROLE_USER")]
     #[Route('/', name: 'app_main')]
     public function index(ProduitRepository $produitRepository): Response
     {

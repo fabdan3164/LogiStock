@@ -8,11 +8,21 @@
         <h1 class="text-center">Bienvenue sur LogiStock</h1>
         <img class="col-3" src="{{ asset('img/separator.svg') }}">
     </div>
+
+    <div class="container">
+        <div class="row justify-content-start mb-3">
+
+            <input type="text" id="myInput" class="light-table-filter col-2 searchbox-input" onkeyup="myFunction()"
+                   placeholder="Recherche">
+
+        </div>
+    </div>
+
     <div class="container mt-4">
         <div class="row align-items-center justify-content-between flex-wrap">
             {% for produit in produits %}
 
-                <div class="col-3" id="{{ produit.id }}">
+                <div class="col-3 carte" id="{{ produit.denomination }}">
                     <div class="card-sl">
                         <div class="card-image border border-white p-3">
                             {% if produit.image %}
@@ -42,30 +52,31 @@
 
 
                         {% set break = false %}
-{% if app.user %}
-                        {% for commandes in app.user.getCommandes() %}
+                        {% if app.user %}
+                            {% for commandes in app.user.getCommandes() %}
 
-                            {% for ligne in commandes.getLignes() %}
-                                {% if ligne.idProduit == produit.partNumber  and ligne.idStatut =='En attente de validation' and not break %}
+                                {% for ligne in commandes.getLignes() %}
+                                    {% if ligne.idProduit == produit.partNumber  and ligne.idStatut =='En attente de validation' and not break %}
 
-                                    {% if not break %}
-                                        <a type="submit" class="card-button"
-                                           href="{{ path('app_ligne_edit', {'id': ligne.id}) }}"><i class="fa-solid fa-cart-plus"></i></a>
-                                        {% set break = true %}
+                                        {% if not break %}
+                                            <a type="submit" class="card-button"
+                                               href="{{ path('app_ligne_edit', {'id': ligne.id}) }}"><i
+                                                        class="fa-solid fa-cart-plus"></i></a>
+                                            {% set break = true %}
+                                        {% endif %}
+
                                     {% endif %}
-
-                                {% endif %}
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
-                                {% if not break %}
-                                    <a type="submit" class="card-button"
-                                       href="{{ path('app_ligne_new', {'id': produit.id}) }}"><i class="fa-solid fa-cart-arrow-down"></i></a>
-                                    {% set break = true %}
-                                {% endif %}
+                            {% if not break %}
+                                <a type="submit" class="card-button"
+                                   href="{{ path('app_ligne_new', {'id': produit.id}) }}"><i
+                                            class="fa-solid fa-cart-arrow-down"></i></a>
+                                {% set break = true %}
+                            {% endif %}
 
 
-{% endif %}
-
+                        {% endif %}
 
 
                     </div>
@@ -77,61 +88,29 @@
 
     <script>
 
-        //        function zoom(id) {
-        //            let input = document.getElementById('input' + id);
-        //
-        //            if (input.value === 'false') {
-        //                input.value = 'true';
-        //
-        //                let card = document.getElementById(id);
-        //
-        //                let tabCards = document.getElementsByClassName('col-3')
-        //                for (let value of tabCards) {
-        //                    if (value.id !== card.id) {
-        //                        value.classList.remove('visible');
-        //                        value.classList.add('invisible');
-        //                    }
-        //                }
-        //                let childlink = document.getElementById(id).getElementsByTagName('a')[0];
-        //                childlink.classList.remove('invisible');
-        //                let childI = document.getElementById(id).getElementsByTagName('i')[0];
-        //                childI.classList.remove('fa-solid');
-        //                childI.classList.remove('fa-magnifying-glass');
-        //                childI.classList.add('fa-solid');
-        //                childI.classList.add('fa-xmark');
-        //                card.style.position = 'absolute';
-        //                card.style.transform = "translate(-50%, -50%)";
-        //                card.style.top = '50%';
-        //                card.style.left = '50%';
-        //                card.style.transition = '0.4s';
-        //                console.log(card)
-        //            } else {
-        //                input.value = 'false';
-        //                let card = document.getElementById(id);
-        //
-        //                let tabCards = document.getElementsByClassName('col-3')
-        //                for (let value of tabCards) {
-        //                    if (value.id !== card.id) {
-        //                        value.classList.remove('invisible');
-        //                        value.classList.add('visible');
-        //                    }
-        //                }
-        //                let childlink = document.getElementById(id).getElementsByTagName('a')[0];
-        //                childlink.classList.remove('visible');
-        //                let childI = document.getElementById(id).getElementsByTagName('i')[0];
-        //                childI.classList.remove('fa-solid');
-        //                childI.classList.remove('fa-xmark');
-        //                childI.classList.add('fa-solid');
-        //                childI.classList.add('fa-magnifying-glass');
-        //
-        //                card.style.position = 'relative';
-        //                card.style.transform = "translate(0%, 0%)";
-        //                card.style.top = '0';
-        //                card.style.left = '0';
-        //                card.style.transition = '0.4s';
-        //
-        //            }
-        //        }
+        function myFunction() {
+
+            // Declare variables
+            var input, filter, a, i, txtValue;
+            input = document.getElementById('myInput');
+
+            filter = input.value.toUpperCase();
+            carte = document.getElementsByClassName("carte");
+
+            // Loop through all list items, and hide those who don't match the search query
+            for (i = 0; i < carte.length; i++) {
+                a = carte[i].getElementsByClassName("card-sl")[0];
+                ;
+
+                txtValue = a.textContent || a.innerText;
+
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    carte[i].classList.remove("d-none")
+                } else {
+                    carte[i].classList.add("d-none");
+                }
+            }
+        }
 
     </script>
 
