@@ -82,10 +82,7 @@ class CommandeController extends AbstractController
 
             // Re-Obtenir la lignes de commande en cours
             $ligne = $ligneRepository->find($ligne->getId());
-
-
         }
-
 
         foreach ($lignes as $ligne) {
             $ligne1 = $ligneRepository->find($ligne->getId());
@@ -93,27 +90,24 @@ class CommandeController extends AbstractController
             // Si la quantité commandée est supérieur à la quantité dans le conteneur, modifier la ligne et en créer  d'autre
             if ($ligne1->getQuantite() > $ligne->getConteneurLigne()->getquantite()) {
 
-            // Appeler tout les conteneurs sur lesquels trouver le produit
+                // Appeler tout les conteneurs sur lesquels trouver le produit
                 $conteneurProduits = $conteneurRepository->findBy(['idProduit' => $ligne->getIdProduit()], ['idStock' => 'ASC']);
 
                 //excepter le premier qui est affecté à la ligne d'origine
-                array_shift($conteneurProduits) ;
+                array_shift($conteneurProduits);
 
-
-            // Calculer la quantité restante à prélever ;
+                // Calculer la quantité restante à prélever ;
                 $quantiteRestante = ($ligne1->getQuantite() - $ligne->getConteneurLigne()->getquantite());
 
-
                 // Verifier dans combien de conteneur repartir la liste
-                foreach ($conteneurProduits as  $conteneurProduit) {
+                foreach ($conteneurProduits as $conteneurProduit) {
 
-//                     MAJ quantite restante à chaque tour de boucle
-                    $quantiteRestante =  $quantiteRestante - $conteneurProduit->getQuantite();
+                // MAJ quantité restante à chaque tour de boucle
+                    $quantiteRestante = $quantiteRestante - $conteneurProduit->getQuantite();
 
                     // MAJ ligneBisc auantite à chaque tour de boucle, jusqu'a ce que la quantité restante soit égale à 0
-                    $ligneBisQuantite = $conteneurProduit->getQuantite() ;
-                    if($quantiteRestante <= 0)
-                    {
+                    $ligneBisQuantite = $conteneurProduit->getQuantite();
+                    if ($quantiteRestante <= 0) {
                         $ligneBisQuantite = $quantiteRestante + $conteneurProduit->getQuantite();
                     }
 
@@ -126,13 +120,13 @@ class CommandeController extends AbstractController
                     $ligneBis->setConteneurLigne($conteneurProduit);
 
                     //MAJ des lignes
-                    $ligneRepository->add( $ligneBis, true);
+                    $ligneRepository->add($ligneBis, true);
 
                     // Supprimer le conteneur utiliser du tableau
-                    array_shift($conteneurProduits) ;
+                    array_shift($conteneurProduits);
 
                     // Sortir de la boucle une fois toute la quantité commandée répartie
-                    if($quantiteRestante <=0 ){
+                    if ($quantiteRestante <= 0) {
                         break;
                     }
                 }
@@ -157,20 +151,26 @@ class CommandeController extends AbstractController
 
         // Trier le tableau de lignes par adresse de stockage pour suivre la route numérique de préparation
         usort($lignes, function ($a, $b) {
-            if($a->getConteneurLigne()->getidStock()->getId() == $b->getConteneurLigne()->getidStock()->getId()){ return 0 ; }
+            if ($a->getConteneurLigne()->getidStock()->getId() == $b->getConteneurLigne()->getidStock()->getId()) {
+                return 0;
+            }
             return ($a->getConteneurLigne()->getidStock()->getId() < $b->getConteneurLigne()->getidStock()->getId()) ? -1 : 1;
         });
 
+        // Ajout de l'adresse de stockage ou aller prélever (en cas de déplacement au cours de la préparation)
+        if ($lignes) {
+            $conteneurPick = $conteneurRepository->find($lignes[0]->getConteneurLigne()->getId());
+            $ligneRepository->add( $lignes[0]->setConteneurLigne($conteneurPick), true);
+        }
 
         // Retourner la vue pour continuer la préparation
         return $this->render('commande/preparation.html.twig', [
             'commande' => $commandeRepository->find($id),
             'lignes' => $lignes,
-            'stocks' => $stockRepository->findAll(),
         ]);
     }
 
-//TO DO etudier suppresion
+        //TO DO etudier suppresion
     #[Route('/new', name: 'app_commande_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CommandeRepository $commandeRepository, StatutRepository $statutRepository): Response
     {
@@ -201,7 +201,7 @@ class CommandeController extends AbstractController
         ]);
     }
 
-//    //TO DO etudier suppresion
+    //TO DO etudier suppresion
     #[Route('/{id}', name: 'app_commande_show', methods: ['GET'])]
     public function show(Commande $commande, LigneRepository $ligneRepository, StockRepository $stockRepository): Response
     {
@@ -244,7 +244,7 @@ class CommandeController extends AbstractController
 
     }
 
-//TO DO etudier suppresion
+    //TO DO etudier suppresion
     #[Route('/{id}/edit', name: 'app_commande_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Commande $commande, CommandeRepository $commandeRepository): Response
     {
@@ -263,7 +263,7 @@ class CommandeController extends AbstractController
         ]);
     }
 
-//TO DO etudier suppresion
+    //TO DO etudier suppresion
     #[Route('/{id}', name: 'app_commande_delete', methods: ['POST'])]
     public function delete(Request $request, Commande $commande, CommandeRepository $commandeRepository): Response
     {
