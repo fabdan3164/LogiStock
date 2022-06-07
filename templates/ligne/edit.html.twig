@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="card-image">
-            <a class="card-action " href="{{ path('app_commande_show' , {'id': ligne.idCommande.id}) }}"><i
+            <a class="card-action " href="{{ app.request.headers.get('referer') }}"><i
                         class="fa-solid fa-backward"></i></a>
             {% if ligne.idProduit.image %}
                 <img

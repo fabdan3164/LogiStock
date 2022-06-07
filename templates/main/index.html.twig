@@ -10,16 +10,16 @@
     </div>
 
     <div class="container">
-        <div class="row justify-content-start mb-3">
-
-            <input type="text" id="myInput" class="light-table-filter col-2 searchbox-input" onkeyup="myFunction()"
+        <div class="row justify-content-between mb-3">
+            <input type="text" id="myInput" class="light-table-filter col-2 searchbox-input" onkeyup="searchCard()"
                    placeholder="Recherche">
+
 
         </div>
     </div>
 
     <div class="container mt-4">
-        <div class="row align-items-center justify-content-between flex-wrap">
+        <div class="row align-items-center justify-content-start flex-wrap">
             {% for produit in produits %}
 
                 <div class="col-3 carte" id="{{ produit.denomination }}">
@@ -78,7 +78,6 @@
 
                         {% endif %}
 
-
                     </div>
                 </div>
             {% endfor %}
@@ -86,32 +85,5 @@
     </div>
 
 
-    <script>
-
-        function myFunction() {
-
-            // Declare variables
-            var input, filter, a, i, txtValue;
-            input = document.getElementById('myInput');
-
-            filter = input.value.toUpperCase();
-            carte = document.getElementsByClassName("carte");
-
-            // Loop through all list items, and hide those who don't match the search query
-            for (i = 0; i < carte.length; i++) {
-                a = carte[i].getElementsByClassName("card-sl")[0];
-                ;
-
-                txtValue = a.textContent || a.innerText;
-
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    carte[i].classList.remove("d-none")
-                } else {
-                    carte[i].classList.add("d-none");
-                }
-            }
-        }
-
-    </script>
 
 {% endblock %}
