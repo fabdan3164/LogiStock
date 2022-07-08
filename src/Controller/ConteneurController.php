@@ -51,12 +51,9 @@ class ConteneurController extends AbstractController
         $conteneur->setIdStock($stockRepository->find(1));
 
         // Créer un code conteneur aléatoire et unique
-        $codeConteneur = 'CONT-' . ByteString::fromRandom(15, '0123456789');
-        if ($conteneurRepository->findby(['codeConteneur' => $codeConteneur])) {
-            $conteneur->setCodeConteneur('CONT-' . ByteString::fromRandom(15, '0123456789'));
-        } else {
-            $conteneur->setCodeConteneur($codeConteneur);
-        }
+        $codeConteneur = 'CC-' . hexdec(uniqid());
+        $conteneur->setCodeConteneur($codeConteneur);
+
 
         $form = $this->createForm(ConteneurType::class, $conteneur);
         $form->handleRequest($request);
@@ -89,14 +86,6 @@ class ConteneurController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_conteneur_show', methods: ['GET'])]
-    public function show(Conteneur $conteneur): Response
-    {
-        return $this->render('conteneur/show.html.twig', [
-                'conteneur' => $conteneur,
-            ]
-        );
-    }
 
     #[Route('/{id}/edit', name: 'app_conteneur_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Conteneur $conteneur, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository): Response
@@ -142,7 +131,7 @@ class ConteneurController extends AbstractController
         $form->handleRequest($request);
 
 
-        // Si l'emplacement de destination est deja occupé bloquer et ajouter un add flash
+        // Si l'emplacement de destination est deja occupé bloquer  ajouter un add flash
         if ($form->isSubmitted() && $conteneurRepository->findOneby(['idStock' => $form['idStock']->getData()]) && !$form['idStock']->getData()->isMultiStockage()) {
 
             //Reinitialise l'adresse de stockage pour affichage
@@ -194,6 +183,53 @@ class ConteneurController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/mouvement/{idStock}/{idConteneur}', name: 'app_conteneur_mouvement_drag', methods: ['GET'])]
+    public function mouvement_drag($idConteneur, $idStock, Request $request, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository, StockRepository $stockRepository): Response
+    {
+        $conteneur = $conteneurRepository->find($idConteneur);
+        $adresse = $stockRepository->find($idStock);
+
+        // Si l'emplacement de destination est deja occupé bloquer et ajouter un add flash
+        if ($adresse->getConteneurs()->isEmpty() == false && $adresse->isMultiStockage() == false) {
+
+            // Add Flash de validation
+            $this->addFlash('MouvementImpossible', 'L\'adresse de destination ' . $adresse->getAdresseStock() . ' est deja occupé');
+
+            $response['resultat'] = false;
+            // Renvoie sur la vue pour une nouvelle saisie
+            return $this->json($response, 403);
+        }
+
+        // Enregistre le flux sortant
+        $flux1 = new Flux();
+        $flux1->setDateFlux(new DateTime());
+        $flux1->setQuantite($conteneur->getQuantite() * -1);
+        $flux1->setType("DÉPLACEMENT");
+        $flux1->setPartNumber($conteneur->getIdProduit());
+        $flux1->setAdresseStock($conteneur->getIdStock()->getAdresseStock());
+        $flux1->setCodeConteneur($conteneur->getCodeConteneur());
+
+        // Enregistre le flux entrant
+        $flux2 = new Flux();
+        $flux2->setDateFlux(new DateTime());
+        $flux2->setQuantite($conteneur->getQuantite());
+        $flux2->setType("DÉPLACEMENT");
+        $flux2->setPartNumber($conteneur->getIdProduit());
+        $flux2->setAdresseStock($adresse->getAdresseStock());
+        $flux2->setCodeConteneur($conteneur->getCodeConteneur());
+
+        $fluxRepository->add($flux1, true);
+        $fluxRepository->add($flux2, true);
+
+        $conteneur->setIdStock($adresse);
+        $conteneurRepository->add($conteneur, true);
+
+        $response['resultat'] = true;
+        return $this->json($response, 200);
+
+    }
+
 
     #[Route('/{id}', name: 'app_conteneur_delete', methods: ['POST'])]
     public function delete(Request $request, Conteneur $conteneur, ConteneurRepository $conteneurRepository): Response

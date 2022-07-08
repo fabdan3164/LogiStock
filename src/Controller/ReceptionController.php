@@ -48,9 +48,6 @@ class ReceptionController extends AbstractController
         ]);
     }
 
-
-
-
     //TO DO etudier suppresion
     #[Route('/{id}/edit', name: 'app_reception_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Reception $reception, ReceptionRepository $receptionRepository): Response

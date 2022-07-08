@@ -28,7 +28,7 @@
         <tr>
             <th >Bon de livraison</th>
             <th ></th>
-            <th ></th>
+            <th > </th>
         </tr>
         </thead>
 
@@ -37,7 +37,7 @@
             <tr>
 
                 <td>{{ reception.bonDeCommande }}</td>
-                <td class="text-end">  <a class="col-1" href="{{ path('app_reception_edit', {'id': reception.id}) }}"><i class="fa-solid fa-pen-to-square"></i></a> - </td>
+                <td class="text-end">  <a class="col-1" href="{{ path('app_reception_edit', {'id': reception.id}) }}"><i class="fa-solid fa-pen-to-square"></i></a> </td>
                 <td>
                     <form class="col-1"  method="post" action="{{ path('app_reception_delete', {'id': reception.id}) }}" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer ce bon de livraison');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reception.id) }}">

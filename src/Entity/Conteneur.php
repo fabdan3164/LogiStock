@@ -14,7 +14,7 @@ class Conteneur implements JsonSerializable
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 20)]
+    #[ORM\Column(type: 'string')]
     private $codeConteneur;
 
     #[ORM\Column(type: 'integer')]

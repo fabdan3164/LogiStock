@@ -170,7 +170,7 @@ class LigneController extends AbstractController
         return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[isGranted("ROLE_USER")]
+    #[isGranted("ROLE_LOG")]
     #[Route('validationPreparation/{id}/{idConteneur}', name: 'app_ligne_statut', methods: ['GET'])]
     public function statut($idConteneur, Ligne $ligne, LigneRepository $ligneRepository, StatutRepository $statutRepository, ConteneurRepository $conteneurRepository, FluxRepository $fluxRepository, CommandeRepository $commandeRepository): Response
     {

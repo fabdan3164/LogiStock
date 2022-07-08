@@ -4,11 +4,13 @@
 
 {% block body %}
 
-        <div class="row justify-content-center mt-3 mb-3">
-            <img class="col-3" src="{{ asset('img/separator.svg') }}">
-            <h1 class="text-center">Adresse de stockage</h1>
-            <img class="col-3" src="{{ asset('img/separator.svg') }}">
-        </div>
+
+    <div class="row justify-content-center mt-3 mb-3">
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+        <h1 class="text-center">Adresse de stockage</h1>
+        <img class="col-3" src="{{ asset('img/separator.svg') }}">
+    </div>
+
 
 
     <div class="container">
@@ -16,18 +18,25 @@
             <input type="search" class="light-table-filter col-2" data-table="table" placeholder="Recherche">
 
             {% if is_granted('ROLE_ADMIN') %}
-            <a class="text-center col-2 p-0" href="{{ path('app_stock_new') }}">Créer une adresse <i
-                        class="fa-solid fa-arrow-right-to-bracket"></i></a>
+                <a class="text-center col-2 p-0" href="{{ path('app_stock_new') }}">Créer une adresse <i
+                            class="fa-solid fa-arrow-right-to-bracket"></i></a>
             {% endif %}
         </div>
     </div>
-
+    {% for message in app.flashes('MouvementImpossible') %}
+        <div class="alert alert-danger alert-dismissible fade show mt-3">
+            {{ message }}
+            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
     <table class="table text-center mt-3">
         <thead>
         <tr>
 
-            <th>AdresseStock</th>
-            <th>MultiStockage</th>
+            <th>Adresse</th>
+            <th>Multi-Stockage</th>
             <th>Occupé</th>
 
             {% if is_granted('ROLE_ADMIN') %}
@@ -40,17 +49,22 @@
             <tr>
 
                 <td>{{ stock.adresseStock }}</td>
-                <td>{{ stock.multiStockage ? 'Yes' : 'No' }}</td>
-                <td>
-                    {% for conteneur in stock.getConteneurs() %}
-                        {{ conteneur.codeConteneur }}     <a href="{{ path('app_conteneur_mouvement', {'id': conteneur.id}) }}"> <i class="fa-solid fa-dolly"></i> </a></br>
+                <td>{{ stock.multiStockage ? 'Oui' : 'Non' }}</td>
+                <td ondragstart="start(event)" ondrop="return drop(event)" ondragover="return over(event)"
+                    id="{{ stock.id }}">
 
+                    {% for conteneur in stock.getConteneurs() %}
+                        <span draggable="true" id="{{ conteneur.id }} "> {{ conteneur.codeConteneur }}  <i
+                                    style="color: #E26D5C"
+                                    class="fa-solid fa-arrows-up-down-left-right"></i></br>
+</span>
                     {% endfor %}
                 </td>
                 {% if is_granted('ROLE_ADMIN') %}
                     <td>
 
-                        <a href="{{ path('app_stock_edit', {'id': stock.id}) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="{{ path('app_stock_edit', {'id': stock.id}) }}"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
                     </td>
                 {% endif %}
             </tr>
@@ -62,5 +76,37 @@
         </tbody>
     </table>
 
+
+    <script>
+
+        function start(e) {
+            e.dataTransfer.effectAllowed = "move";
+            e.dataTransfer.setData("text", e.target.getAttribute("id"));
+        }
+
+        function over(e) {
+            return false;
+        }
+
+        async function drop(e) {
+            ob = e.dataTransfer.getData("text");
+            e.currentTarget.appendChild(document.getElementById(ob));
+
+            let idStock = e.target.getAttribute("id")
+
+            if (e.target.tagName === "SPAN") {
+                idStock = e.target.parentElement.id;
+            }
+
+            let idCont = e.currentTarget.appendChild(document.getElementById(ob)).getAttribute("id")
+
+            let response = await fetch(`${window.location.origin}/conteneur/mouvement/${idStock}/${idCont}`);
+
+            let change = await response.json();
+
+            if (change.resultat === false)
+                location.reload();
+        }
+    </script>
 
 {% endblock %}

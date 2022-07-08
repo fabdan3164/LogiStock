@@ -201,7 +201,6 @@ class CommandeController extends AbstractController
         ]);
     }
 
-    //TO DO etudier suppresion
     #[Route('/{id}', name: 'app_commande_show', methods: ['GET'])]
     public function show(Commande $commande, LigneRepository $ligneRepository, StockRepository $stockRepository): Response
     {
@@ -244,26 +243,8 @@ class CommandeController extends AbstractController
 
     }
 
-    //TO DO etudier suppresion
-    #[Route('/{id}/edit', name: 'app_commande_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Commande $commande, CommandeRepository $commandeRepository): Response
-    {
-        $form = $this->createForm(CommandeType::class, $commande);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $commandeRepository->add($commande, true);
 
-            return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('commande/edit.html.twig', [
-            'commande' => $commande,
-            'form' => $form,
-        ]);
-    }
-
-    //TO DO etudier suppresion
     #[Route('/{id}', name: 'app_commande_delete', methods: ['POST'])]
     public function delete(Request $request, Commande $commande, CommandeRepository $commandeRepository): Response
     {

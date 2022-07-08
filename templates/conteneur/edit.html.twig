@@ -1,17 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Conteneur{% endblock %}
+{% block title %}Ajustement{% endblock %}
 
 {% block body %}
-
 
     <div class="container mt-4">
         <div class="row align-items-center justify-content-center">
 
-
             <div class="col-12 p-0">
                 <div class="card-sl">
-
 
                     <div class="card-heading text-center">
 
@@ -19,21 +16,21 @@
                             <img class="col-3" src="{{ asset('img/separator.svg') }}">
                             <h1 class="text-center">Ajustement</h1>
                             <img class="col-3" src="{{ asset('img/separator.svg') }}">
-
                         </div>
 
                     </div>
+
+                        <a class="card-action " href="{{ app.request.headers.get('referer') }}"><i
+                                    class="fa-solid fa-backward"></i></a>
 
                     {{ form_start(form, {'attr': {'class': 'row m-0 justify-content-center'}}) }}
 
                     {{ form_label(form.quantite, 'Saisir la nouvelle quantité', { 'label_attr': {'class': 'text-center mt-5'}}) }}
 
-
                     {{ form_widget(form.quantite, {'attr': {'class': 'col-4 mt-2 text-center  '}}) }}
 
                     <label class="text-center mt-5" for="commentaire">Commentaire</label>
                     <input class="col-4 mt-2 text-center" id="commentaire" type="text" name="commentaire">
-
 
                     <div class="col-12 m-5">
                         <button type="submit" class="card-button"
@@ -42,19 +39,9 @@
                         </button>
                     </div>
                     {{ form_end(form) }}
-
-
                 </div>
-
             </div>
-
         </div>
     </div>
-
-
-
-
-
-
 
 {% endblock %}

@@ -45,7 +45,6 @@ class StockController extends AbstractController
     }
 
 
-
     #[isGranted("ROLE_ADMIN")]
     #[Route('/{id}/edit', name: 'app_stock_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Stock $stock, StockRepository $stockRepository): Response
